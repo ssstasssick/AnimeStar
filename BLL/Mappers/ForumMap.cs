@@ -14,7 +14,6 @@ namespace BLL.Mappers
         public ForumMap() 
         {
             CreateMap<Forum, ForumDTO>()
-                    .ForMember(dest => dest.UserDTO, opt => opt.MapFrom(scr => scr.User))
                     .ForMember(dest => dest.Anime, opt => opt.MapFrom(scr => scr.Anime))
                     .ForMember(dest => dest.Comments, opt => opt.MapFrom(scr => scr.Comments))
                     .ReverseMap();

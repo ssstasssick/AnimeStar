@@ -10,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 //AutoMapperConfig.Configure(builder.Services);
-builder.Services.Configurate(GetConnString.GetString());
+builder.Services.Configurate(GetConnString.GetString(), GetConnString.GetRootString());
 
 var app = builder.Build();
 

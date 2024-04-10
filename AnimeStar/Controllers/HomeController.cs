@@ -3,6 +3,7 @@ using AutoMapper;
 using BLL.Entity;
 using BLL.Factories;
 using BLL.Factories.Interface;
+using BLL.ImgProviders;
 using BLL.Interfaces;
 using BLL.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -13,23 +14,30 @@ namespace AnimeStar.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly ICharacterService _characterService;
+        private readonly IFactoryRep _factory;
+        private readonly IAnimeImagePathProvider _animeImagePathProvider;
 
-        public HomeController(ILogger<HomeController> logger, ICharacterService characterService)
+        public HomeController(ILogger<HomeController> logger, IFactoryRep factory, IAnimeImagePathProvider animeImagePathProvider)
         {
             _logger = logger;
-            _characterService = characterService;
+            _factory = factory;
+            _animeImagePathProvider = animeImagePathProvider;
         }
 
         public IActionResult Index()
         {
-            //factory.CreateCharacterRepository()
-            //    .Create(new BLL.Entity.CharacterDTO
-            //    {
-            //        Name = "First",
-            //        Description = "First",
-            //    });
-            List<CharacterDTO> characters = _characterService.GetAll().ToList();
+            List<AnimeDTO> latestAnimes = _factory.CreateAnimeRepository().GetAll()
+                                                    .OrderByDescending(a => a.ReleaseDate)
+                                                    .Take(5)
+                                                    .Select(a =>
+                                                    {
+                                                        a.ImgPath = _animeImagePathProvider.GetAnimeImagePath(a.PictureName);
+                                                        return a;
+                                                    })
+                                                    .ToList();
+                                                    
+            ViewBag.LatestAnime = latestAnimes;
+
             return View();
         }
 

@@ -18,7 +18,7 @@ namespace BLL.Services
         private readonly ICharacterRepository _characterRepository;
         private readonly IMapper _mapper;
 
-        public CharacterService(CharacterRepository characterRepository, IMapper mapper)
+        public CharacterService(ICharacterRepository characterRepository, IMapper mapper)
         {
             _characterRepository = characterRepository;
             _mapper = mapper;

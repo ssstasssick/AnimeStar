@@ -9,6 +9,5 @@ namespace BLL.Interfaces
 {
     public interface IAnimeService : IService<AnimeDTO>
     {
-
     }
 }

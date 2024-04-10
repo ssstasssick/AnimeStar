@@ -11,6 +11,7 @@ namespace DAL.Entity
     {
         public virtual ICollection<Review> Reviews { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }  
+        public virtual ICollection<Forum> Forums { get; set; }
         public DateTime RegisterDate { get; set; }
 
 

@@ -16,3 +16,43 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    width: 100%; /* Ўирина блока на 100% */
+    height: 400px; /* «адайте фиксированную высоту дл€ карточек */
+    overflow: hidden; /* —крыть содержимое, выход€щее за пределы карточки */
+}
+
+    .card:hover {
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+    }
+
+.card-img-top {
+    height: 300px; /* ¬ысота изображени€ */
+    object-fit: cover; /* «аполнение изображени€ в пределах размеров блока */
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    overflow: hidden; /* —крыть содержимое, выход€щее за пределы карточки */
+    white-space: nowrap; /* ѕредотвратить перенос текста на новую строку */
+    text-overflow: ellipsis; /* «аменить выход€щий текст многоточием */
+}
+
+.card-text {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.animeHead {
+    font-size: 2rem;
+}
+
+.bg-custom {
+    background-color: #e6e6e6;
+}

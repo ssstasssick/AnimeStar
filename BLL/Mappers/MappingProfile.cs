@@ -36,7 +36,6 @@ namespace BLL.Mappers
                 .ForMember(dest => dest.Animes, opt => opt.MapFrom(scr => scr.AnimeAndGenres.Select(aas => aas.Anime))).ReverseMap();
 
             CreateMap<Forum, ForumDTO>()
-                .ForMember(dest => dest.UserDTO, opt => opt.MapFrom(scr => scr.User))
                 .ForMember(dest => dest.Anime, opt => opt.MapFrom(scr => scr.Anime))
                 .ForMember(dest => dest.Comments, opt => opt.MapFrom(scr => scr.Comments))
                 .ReverseMap();
@@ -65,6 +64,9 @@ namespace BLL.Mappers
                 .ForMember(dest => dest.Comments, opt => opt.MapFrom(scr => scr.Comments))
                 .ReverseMap();
 
+            CreateMap<AnimeAndCharacter, AnimeAndCharacterDTO>().ReverseMap();
+            CreateMap<AnimeAndGenre,  AnimeAndGenreDTO>().ReverseMap();
+            CreateMap<AnimeAndStudio, AnimeAndStudioDTO>().ReverseMap();
 
         }
 

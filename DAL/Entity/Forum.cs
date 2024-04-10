@@ -12,10 +12,7 @@ namespace DAL.Entity
         public int Id { get; set; }
         public string Title { get; set; }
         public DateTime CreationDate { get; set; }
-        public string UserId { get; set; }
-        public User User { get; set; }
         public virtual ICollection<Comment> Comments { get; set; }
-
         public int AnimeId { get; set; }
         public Anime Anime { get; set; }
     }

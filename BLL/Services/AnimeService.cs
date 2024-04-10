@@ -2,6 +2,7 @@
 using BLL.Entity;
 using BLL.Interfaces;
 using DAL.Entity;
+using DAL.ImgOutput.wwwroot;
 using DAL.Interfaces;
 using DAL.SQL; 
 using System;
@@ -54,5 +55,7 @@ namespace BLL.Services
         {
             _animeRepository.Update(_mapper.Map<Anime>(entity));
         }
+
+
     }
 }

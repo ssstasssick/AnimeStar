@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace DAL.Migrations
 {
-    /// <inheritdoc />
-    public partial class first : Migration
+    public partial class CreateDataBase : Migration
     {
-        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -58,7 +56,8 @@ namespace DAL.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ImgName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -80,7 +79,7 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "MPAA",
+                name: "MPAAs",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -90,7 +89,7 @@ namespace DAL.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_MPAA", x => x.Id);
+                    table.PrimaryKey("PK_MPAAs", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -222,95 +221,100 @@ namespace DAL.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     ReleaseDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    MPAAId = table.Column<int>(type: "int", nullable: false)
+                    MPAAId = table.Column<int>(type: "int", nullable: false),
+                    PictureName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TypeOfAnime = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    NumberOfEpisodes = table.Column<int>(type: "int", nullable: false),
+                    LenghtOfTheFilm = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AnimeState = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Animes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Animes_MPAA_MPAAId",
+                        name: "FK_Animes_MPAAs_MPAAId",
                         column: x => x.MPAAId,
-                        principalTable: "MPAA",
+                        principalTable: "MPAAs",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AnimeAndCharacters",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     AnimeId = table.Column<int>(type: "int", nullable: false),
-                    CharacterId = table.Column<int>(type: "int", nullable: false)
+                    CharacterId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnimeAndCharacters", x => x.Id);
+                    table.PrimaryKey("PK_AnimeAndCharacters", x => new { x.AnimeId, x.CharacterId });
                     table.ForeignKey(
                         name: "FK_AnimeAndCharacters_Animes_AnimeId",
                         column: x => x.AnimeId,
                         principalTable: "Animes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AnimeAndCharacters_Characters_CharacterId",
                         column: x => x.CharacterId,
                         principalTable: "Characters",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "AnimeAndGenres",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     AnimeId = table.Column<int>(type: "int", nullable: false),
-                    GenreId = table.Column<int>(type: "int", nullable: false)
+                    GenreId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AnimeAndGenres", x => x.Id);
+                    table.PrimaryKey("PK_AnimeAndGenres", x => new { x.AnimeId, x.GenreId });
                     table.ForeignKey(
                         name: "FK_AnimeAndGenres_Animes_AnimeId",
                         column: x => x.AnimeId,
                         principalTable: "Animes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_AnimeAndGenres_Genres_GenreId",
                         column: x => x.GenreId,
                         principalTable: "Genres",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
-                name: "animeAndStudios",
+                name: "AnimeAndStudios",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
                     AnimeId = table.Column<int>(type: "int", nullable: false),
-                    StudioId = table.Column<int>(type: "int", nullable: false)
+                    StudioId = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1")
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_animeAndStudios", x => x.Id);
+                    table.PrimaryKey("PK_AnimeAndStudios", x => new { x.AnimeId, x.StudioId });
                     table.ForeignKey(
-                        name: "FK_animeAndStudios_Animes_AnimeId",
+                        name: "FK_AnimeAndStudios_Animes_AnimeId",
                         column: x => x.AnimeId,
                         principalTable: "Animes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_animeAndStudios_Studios_StudioId",
+                        name: "FK_AnimeAndStudios_Studios_StudioId",
                         column: x => x.StudioId,
                         principalTable: "Studios",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -321,9 +325,8 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    AnimeId = table.Column<int>(type: "int", nullable: false)
+                    AnimeId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -333,36 +336,36 @@ namespace DAL.Migrations
                         column: x => x.AnimeId,
                         principalTable: "Animes",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_Forums_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Forums_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
-                name: "PersonalList",
+                name: "PersonalLists",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AnimeId = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    State = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PersonalList", x => x.Id);
+                    table.PrimaryKey("PK_PersonalLists", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PersonalList_Animes_AnimeId",
+                        name: "FK_PersonalLists_Animes_AnimeId",
                         column: x => x.AnimeId,
                         principalTable: "Animes",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_PersonalList_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_PersonalLists_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -376,7 +379,7 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     AnimeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
@@ -392,7 +395,8 @@ namespace DAL.Migrations
                         name: "FK_Reviews_AspNetUsers_UserId",
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -403,18 +407,18 @@ namespace DAL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     CreationDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
-                    UserId1 = table.Column<string>(type: "nvarchar(450)", nullable: true),
+                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     ForumId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Comments", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Comments_AspNetUsers_UserId1",
-                        column: x => x.UserId1,
+                        name: "FK_Comments_AspNetUsers_UserId",
+                        column: x => x.UserId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Comments_Forums_ForumId",
                         column: x => x.ForumId,
@@ -424,19 +428,9 @@ namespace DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_AnimeAndCharacters_AnimeId",
-                table: "AnimeAndCharacters",
-                column: "AnimeId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_AnimeAndCharacters_CharacterId",
                 table: "AnimeAndCharacters",
                 column: "CharacterId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AnimeAndGenres_AnimeId",
-                table: "AnimeAndGenres",
-                column: "AnimeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AnimeAndGenres_GenreId",
@@ -444,13 +438,8 @@ namespace DAL.Migrations
                 column: "GenreId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_animeAndStudios_AnimeId",
-                table: "animeAndStudios",
-                column: "AnimeId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_animeAndStudios_StudioId",
-                table: "animeAndStudios",
+                name: "IX_AnimeAndStudios_StudioId",
+                table: "AnimeAndStudios",
                 column: "StudioId");
 
             migrationBuilder.CreateIndex(
@@ -503,9 +492,9 @@ namespace DAL.Migrations
                 column: "ForumId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Comments_UserId1",
+                name: "IX_Comments_UserId",
                 table: "Comments",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Forums_AnimeId",
@@ -513,19 +502,19 @@ namespace DAL.Migrations
                 column: "AnimeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Forums_UserId1",
+                name: "IX_Forums_UserId",
                 table: "Forums",
-                column: "UserId1");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonalList_AnimeId",
-                table: "PersonalList",
+                name: "IX_PersonalLists_AnimeId",
+                table: "PersonalLists",
                 column: "AnimeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PersonalList_UserId1",
-                table: "PersonalList",
-                column: "UserId1");
+                name: "IX_PersonalLists_UserId",
+                table: "PersonalLists",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reviews_AnimeId",
@@ -538,7 +527,6 @@ namespace DAL.Migrations
                 column: "UserId");
         }
 
-        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
@@ -548,7 +536,7 @@ namespace DAL.Migrations
                 name: "AnimeAndGenres");
 
             migrationBuilder.DropTable(
-                name: "animeAndStudios");
+                name: "AnimeAndStudios");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
@@ -569,7 +557,7 @@ namespace DAL.Migrations
                 name: "Comments");
 
             migrationBuilder.DropTable(
-                name: "PersonalList");
+                name: "PersonalLists");
 
             migrationBuilder.DropTable(
                 name: "Reviews");
@@ -596,7 +584,7 @@ namespace DAL.Migrations
                 name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "MPAA");
+                name: "MPAAs");
         }
     }
 }

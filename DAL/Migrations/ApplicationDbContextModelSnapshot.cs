@@ -30,17 +30,36 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("AnimeState")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("LenghtOfTheFilm")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MPAAId")
                         .HasColumnType("int");
 
+                    b.Property<int>("NumberOfEpisodes")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PictureName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TypeOfAnime")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -53,21 +72,19 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entity.AnimeAndCharacter", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
                     b.Property<int>("CharacterId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasIndex("AnimeId");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("AnimeId", "CharacterId");
 
                     b.HasIndex("CharacterId");
 
@@ -76,21 +93,19 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entity.AnimeAndGenre", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasIndex("AnimeId");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("AnimeId", "GenreId");
 
                     b.HasIndex("GenreId");
 
@@ -99,21 +114,19 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entity.AnimeAndStudio", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
                     b.Property<int>("StudioId")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
 
-                    b.HasIndex("AnimeId");
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.HasKey("AnimeId", "StudioId");
 
                     b.HasIndex("StudioId");
 
@@ -129,6 +142,10 @@ namespace DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImgName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -191,7 +208,6 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -256,8 +272,9 @@ namespace DAL.Migrations
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("State")
-                        .HasColumnType("int");
+                    b.Property<string>("State")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
                         .IsRequired()
@@ -530,7 +547,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entity.MPAA", "MPAA")
                         .WithMany("Animes")
                         .HasForeignKey("MPAAId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("MPAA");
@@ -541,13 +558,13 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entity.Anime", "Anime")
                         .WithMany("AnimeAndCharacters")
                         .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DAL.Entity.Character", "Character")
                         .WithMany("AnimeAndCharacters")
                         .HasForeignKey("CharacterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Anime");
@@ -560,13 +577,13 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entity.Anime", "Anime")
                         .WithMany("AnimeAndGenres")
                         .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DAL.Entity.Genre", "Genre")
                         .WithMany("AnimeAndGenres")
                         .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Anime");
@@ -579,13 +596,13 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entity.Anime", "Anime")
                         .WithMany("AnimeAndStudios")
                         .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("DAL.Entity.Studio", "Studio")
                         .WithMany("AnimeAndStudios")
                         .HasForeignKey("StudioId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Anime");
@@ -604,7 +621,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entity.User", "User")
                         .WithMany("Comments")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Forum");
@@ -617,18 +634,14 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entity.Anime", "Anime")
                         .WithMany("Forums")
                         .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("DAL.Entity.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("DAL.Entity.User", null)
+                        .WithMany("Forums")
+                        .HasForeignKey("UserId");
 
                     b.Navigation("Anime");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DAL.Entity.PersonalList", b =>
@@ -661,7 +674,7 @@ namespace DAL.Migrations
                     b.HasOne("DAL.Entity.User", "User")
                         .WithMany("Reviews")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Anime");
@@ -763,6 +776,8 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entity.User", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Forums");
 
                     b.Navigation("Reviews");
                 });

@@ -1,7 +1,11 @@
-﻿using BLL.Interfaces;
+﻿using BLL.ImgProviders;
+using BLL.Interfaces;
 using BLL.Mappers;
 using BLL.Services;
 using DAL;
+using DAL.ImgOutput.wwwroot;
+using DAL.Interfaces;
+using DAL.SQL;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -13,20 +17,14 @@ namespace BLL
 {
     public static class ConfigurationBLL
     {
-        public static void ConfigureBLLServices(this IServiceCollection services, string connString)
+        public static void ConfigureBLLServices(this IServiceCollection services, string connString, string connRoot)
         {
-            services.ConfigurateDALService(connString);
+            services.ConfigurateDALService(connString, connRoot);
 
-            services.AddScoped<AnimeMap>();
-            services.AddScoped<CharacterMap>();
-            services.AddScoped<CommentMap>();
-            services.AddScoped<ForumMap>();
-            services.AddScoped<UserMap>();
-            services.AddScoped<GenreMap>();
-            services.AddScoped<MPAA_Map>();
-            services.AddScoped<PersonalListMap>();
-            services.AddScoped<ReviewMap>();
-            services.AddScoped<StudioMap>();
+            services.AddScoped<IAnimeImagePathProvider>(provider =>
+            {
+                return new ImgProvider(connRoot);
+            });
 
             services.AddScoped<IAnimeService, AnimeService>();
             services.AddScoped<ICharacterService, CharacterService>();
@@ -38,6 +36,9 @@ namespace BLL
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IStudioService, StudioService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAnimeAndCharacterService, AnimeAndCharacterService>();
+            services.AddScoped<IAnimeAndStudioService, AnimeAndStudioService>();
+            services.AddScoped<IAnimeAndGenreService, AnimeAndGenreService>();
         }
     }
 }

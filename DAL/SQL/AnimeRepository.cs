@@ -28,9 +28,9 @@ namespace DAL.SQL
             var anime = _context.Animes.Find(id);
             if (anime != null)
             {
-               _context.Remove(id);
+                _context.Remove(id);
             }
-           
+
         }
 
         public IEnumerable<Anime> Find(Func<Anime, bool> predicate)
@@ -45,7 +45,10 @@ namespace DAL.SQL
 
         public IEnumerable<Anime> GetAll()
         {
-            return _context.Animes.ToList();
+            return _context.Animes
+                .Include(a => a.AnimeAndCharacters)
+                .ThenInclude(aac => aac.Character)
+                .ToList();
         }
 
         public void Update(Anime entity)

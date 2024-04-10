@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,7 @@ namespace DAL.Entity
         public Anime Anime { get; set; }
         public string UserId { get; set; }
         public User User { get; set; }
-        public State State { get; set; }
+        [EnumDataType(typeof(State))]
+        public string State { get; set; }
     }
 }

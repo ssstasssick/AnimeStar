@@ -1,0 +1,25 @@
+﻿.card {
+    border: 1px solid #dee2e6;
+    border-radius: 0.25rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+    .card:hover {
+        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.1);
+    }
+
+.card-img-top {
+    height: 200px; /* Высота изображения */
+    object-fit: cover; /* Заполнение изображения в пределах размеров блока */
+}
+
+.card-title {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #6c757d;
+}
