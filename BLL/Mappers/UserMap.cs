@@ -13,7 +13,7 @@ namespace BLL.Mappers
     {
         public UserMap() 
         {
-            CreateMap<User, UserDTO>()
+            CreateMap<ApplicationUser, UserDTO>()
                     .ForMember(dest => dest.Reviews, opt => opt.MapFrom(scr => scr.Reviews))
                     .ForMember(dest => dest.Comments, opt => opt.MapFrom(scr => scr.Comments))
                     .ReverseMap();

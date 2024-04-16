@@ -1,0 +1,39 @@
+﻿.minicard {
+    border-radius: 0.25rem;
+    width: 100%;
+    height: 150px;
+    display: flex;
+    overflow: hidden;
+    box-shadow: 0px 0px 15px rgb(227 88 252);
+    transition: all 0.7s ease;
+    background: rgba(0,0,0,0.3);
+}
+
+    .minicard:hover {
+        box-shadow: 0 0px 12px rgba(0, 0, 0, 0.5);
+    }
+
+.minicard-img {
+    width: auto; /* Размер изображения */
+    height: 150px; /* Автоматическая высота */
+    margin-right: 10px; /* Отступ справа */
+    object-fit: cover;
+}
+
+.minicard-info {
+    flex: 1; /* Информация занимает всю доступную ширину справа */
+    padding: 10px; /* Поля вокруг текста */
+}
+
+.minicard-title {
+    color: ghostwhite;
+    font-size: 1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.minicard-text {
+    font-size: 0.8rem;
+    color: #6c757d;
+    margin: 0;
+}

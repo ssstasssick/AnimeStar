@@ -18,10 +18,10 @@ namespace BLL.Factories.Interface
         IMPAAService CreateMPAARepository();
         IReviewService CreateReviewRepository();
         IStudioService CreateStudioRepository();
-        IUserService CreateUserService();
         IAnimeAndCharacterService CreateAnimeAndCharacterService();
         IAnimeAndGenreService CreateAnimeAndGenreService();
         IAnimeAndStudioService CreateAnimeAndStudioService();
+        IUserService CreateUserService();
 
     }
 }

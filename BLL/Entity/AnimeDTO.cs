@@ -1,4 +1,6 @@
-﻿namespace BLL.Entity
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BLL.Entity
 {
     public class AnimeDTO
     {
@@ -14,6 +16,8 @@
         public string LenghtOfTheFilm { get; set; }
         public string AnimeState { get; set; }
         public string ImgPath { get; set; }
+        public double AverageRating { get; set; } = 0.0;
+
         public virtual ICollection<CharacterDTO> Characters { get; set; }
         public virtual ICollection<GenreDTO> Genres { get; set; }
         public virtual ICollection<StudioDTO> Studios { get; set; }

@@ -1,11 +1,19 @@
-﻿using BLL.ImgProviders;
+﻿using AutoMapper;
+using BLL.Entity;
+using BLL.Factories;
+using BLL.Factories.Interface;
+using BLL.ImgProviders;
 using BLL.Interfaces;
 using BLL.Mappers;
 using BLL.Services;
 using DAL;
+using DAL.Entity;
 using DAL.ImgOutput.wwwroot;
 using DAL.Interfaces;
 using DAL.SQL;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -35,10 +43,34 @@ namespace BLL
             services.AddScoped<IPersonalListService, PersonalListService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IStudioService, StudioService>();
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAnimeAndCharacterService, AnimeAndCharacterService>();
             services.AddScoped<IAnimeAndStudioService, AnimeAndStudioService>();
             services.AddScoped<IAnimeAndGenreService, AnimeAndGenreService>();
+            services.AddScoped<IUserService, UserService>();
+
+            var mapperConfig = new MapperConfiguration(cfg =>
+            {
+                cfg.AddProfile(new MappingProfile());
+
+            });
+
+            services.AddScoped<IMapper>(provider =>
+            {
+                return mapperConfig.CreateMapper();
+
+            });
+
+            services.AddIdentityCore<UserDTO>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddScoped<IFactoryRep, SQLRepFactory>();
+
+
+
+            
+
+
         }
     }
 }

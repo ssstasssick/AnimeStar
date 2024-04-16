@@ -14,45 +14,38 @@ namespace BLL.Services
 {
     public class UserService : IUserService
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUserRepository userRepository;
         private readonly IMapper _mapper;
 
         public UserService(IUserRepository userRepository, IMapper mapper)
         {
-            _userRepository = userRepository;
+            this.userRepository = userRepository;
             _mapper = mapper;
         }
 
-        public void Create(UserDTO entity)
+        public async Task CreateUser(UserDTO user, string password)
         {
-            _userRepository.Create(_mapper.Map<User>(entity));
+            await userRepository.Create(_mapper.Map<ApplicationUser>(user), password);
         }
 
-        public void Delete(int id)
+        public async Task ChangePassword(UserDTO user, string newPassword)
         {
-            _userRepository.Delete(id);
+            await userRepository.ChangePassword(_mapper.Map<ApplicationUser>(user), newPassword);;
         }
 
-        public IEnumerable<UserDTO> Find(Func<UserDTO, bool> predicate)
+        public async Task DeleteUser(UserDTO user)
         {
-            Func<User, bool> userPredicate = user => predicate(_mapper.Map<UserDTO>(user));
-            var users = _userRepository.Find(userPredicate);
-            return users.Select(u => _mapper.Map<UserDTO>(u));
+            await userRepository.Delete(_mapper.Map<ApplicationUser>(user));
         }
 
-        public UserDTO Get(int id)
+        public async Task<UserDTO> GetUserByEmail(string email)
         {
-            return _mapper.Map<UserDTO>(_userRepository.Get(id));
+            return _mapper.Map<UserDTO>(await userRepository.FindByEmailAsync(email));
         }
 
-        public IEnumerable<UserDTO> GetAll()
+        public async Task<IEnumerable<UserDTO>> GetAllUsers()
         {
-            return _userRepository.GetAll().Select(u => _mapper.Map<UserDTO>(u));
-        }
-
-        public void Update(UserDTO entity)
-        {
-            _userRepository.Update(_mapper.Map<User>(entity));
+            return (await userRepository.GetAll()).Select(u => _mapper.Map<UserDTO>(u));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace DAL.Entity
         public int AnimeId { get; set; }
         public Anime Anime { get; set; }
         public string UserId { get; set; }
-        public User User { get; set; }
+        public ApplicationUser User { get; set; }
         [EnumDataType(typeof(State))]
         public string State { get; set; }
     }

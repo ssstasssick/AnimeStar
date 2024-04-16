@@ -6,6 +6,7 @@
     <title>@ViewData["Title"] - AnimeStar</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/miniBlockAnime.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/AnimeStar.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -13,7 +14,7 @@
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
                 <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#"></use></svg>
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center align-items-center mb-md-0">
@@ -40,7 +41,7 @@
                     </li>
 
                     <li>
-                        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search">
+                        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-4" role="search">
                             <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
                         </form>
                     </li>
@@ -49,14 +50,15 @@
                     </li>
                     <li>
                         <a class="align-items-center me-3" href="#"><img src="/img/icons/mail.png" /></a>
-                    </li>
+                    </li>                   
                 </ul>
-
-
-
                 <div class="text-end">
-                    <button type="button" class="btn btn-outline-light me-2">Login</button>
-                    <button type="button" class="btn btn-warning">Sign-up</button>
+                    <form method="post" asp-controller="Account" asp-action="Register">
+                        <button type="button" class="btn btn-outline-light me-2">Login</button>
+                    </form>
+                    <form method="post" asp-controller="Account" asp-action="Register">
+                        <button type="submit" class="btn btn-warning">Sign-up</button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -67,7 +69,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer text-muted footer-main">
         <div class="container">
             &copy; 2024 - AnimeStar - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>

@@ -34,6 +34,8 @@ namespace DAL.Entity
         public string LenghtOfTheFilm { get; set; }
         [EnumDataType(typeof(State))]
         public string AnimeState { get; set; }
+
+        public double AverageRating { get; set; } = 0.0;
         public virtual ICollection<AnimeAndCharacter> AnimeAndCharacters { get; set; }
         public virtual ICollection<AnimeAndGenre> AnimeAndGenres { get; set; }
         public virtual ICollection<AnimeAndStudio> AnimeAndStudios { get; set; }

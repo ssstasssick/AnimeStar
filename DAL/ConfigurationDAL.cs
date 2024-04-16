@@ -24,7 +24,7 @@ namespace DAL
                 option.UseSqlServer(connString);
             });
 
-            services.AddIdentityCore<User>()
+            services.AddIdentityCore<ApplicationUser>()
                 .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
@@ -46,6 +46,9 @@ namespace DAL
             services.AddScoped<IReviewRepository, ReviewRepository>();
             services.AddScoped<IStudioRepository, StudioRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
+
+
+
         }
     }
 }

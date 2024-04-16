@@ -3,11 +3,9 @@
 }
 
 <div class="container">
-    <div class="bg-custom p-0 my-3">
-        <a href="#" class="d-block text-left text-black text-decoration-none">
-            <h2>Последние добавленные аниме</h2>
-        </a>
-    </div>
+    <a href="#" class="d-block text-left text-decoration-none bg-callout">
+        <h2>Последние добавленные аниме</h2>
+    </a>
     <div class="row">
         @foreach (var anime in ViewBag.LatestAnime)
         {
@@ -22,9 +20,8 @@
             </div>
         }
     </div>
-    <div class="row">
-        <div class="col-md-3">
-            <!-- Блок слева -->
+    <div class="row align-items-start border-radius:0.25rem">
+        <div class="col-md-3 align-items-start">
             <div class="bg-custom p-2 my-2">
                 <h2>Мой список</h2>
                 <ul class="list-group">
@@ -35,7 +32,87 @@
                 </ul>
             </div>
         </div>
-    </div>
-    <div>
+        <div class="col-md-4 align-items-start">
+            <div class="container">
+                <div class="row">
+                    <div class="m-1 p-1 bg-teg text-blue">
+                        <a class="text-decoration-none" href="#">Аниме</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># Весна 2024</a>
+                    </div>
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># Зима 2024</a>
+                    </div>
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># 2024</a>
+                    </div>
 
+                </div>
+                <div class="row">
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># 2023</a>
+                    </div>
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># Онгоинги</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 align-items-start">
+            <div class="container">
+                <div class="row">
+                    <div class="m-1 p-1 bg-teg text-blue">
+                        <a class="text-decoration-none" href="#">Темы дня</a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># Весна 2024</a>
+                    </div>
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># Зима 2024</a>
+                    </div>
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># 2024</a>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># 2023</a>
+                    </div>
+                    <div class="m-1 p-1 col teg">
+                        <a href="#" class="text-decoration-none"># Онгоинги</a>
+                    </div>
+
+                </div>
+            </div>
+            <div w-100>
+            </div>
+        </div>
+
+        <a href="#" class="d-block text-left text-decoration-none bg-callout">
+            <h2>Лучшие аниме</h2>
+        </a>
     </div>
+    <div class="row">
+        @foreach (var anime in ViewBag.BestAnime)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="minicard">
+                    <img src="@anime.ImgPath" class="minicard-img" alt="@anime.Title">
+                    <div class="minicard-info">
+                        <h5 class="minicard-title">@anime.Title</h5>
+                        <p class="minicard-text">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+</div>
+

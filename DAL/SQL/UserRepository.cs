@@ -1,5 +1,6 @@
 ﻿using DAL.Entity;
 using DAL.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,46 +12,47 @@ namespace DAL.SQL
 {
     public class UserRepository : IUserRepository
     {
-        private readonly ApplicationDbContext _context;
-        public UserRepository(ApplicationDbContext context)
+        private readonly UserManager<ApplicationUser> _userManager;
+        public UserRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
         {
-            _context = context;
+            _userManager = userManager;
         }
 
-        public void Create(User entity)
+        public async Task ChangePassword(ApplicationUser user, string password)
         {
-            _context.Users.Add(entity);
-            _context.SaveChanges();
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            await _userManager.ResetPasswordAsync(user, token, password);
         }
 
-        public void Delete(int id)
+        public async Task Create(ApplicationUser user, string password) 
         {
-            var user = _context.Users.Find(id);
-            if (user != null)
+            var result = await _userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
             {
-                _context.Users.Remove(user);
+                var errors = string.Join(", ", result.Errors);
+                throw new InvalidOperationException($"Failed to create user: {errors}");
             }
         }
 
-        public IEnumerable<User> Find(Func<User, bool> predicate)
+        public async Task Delete(ApplicationUser user)
         {
-            return _context.Users.Where(predicate);
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors);
+                throw new InvalidOperationException($"Failed to delete user: {errors}");
+            }
         }
 
-        public User Get(int id)
+        public async Task<ApplicationUser> FindByEmailAsync(string email)
         {
-            return _context.Users.Find(id);
+            return await _userManager.FindByEmailAsync(email);
         }
 
-        public IEnumerable<User> GetAll()
+        public async Task<IEnumerable<ApplicationUser>> GetAll()
         {
-            return _context.Users;
+            return await Task.FromResult<IEnumerable<ApplicationUser>>(_userManager.Users);
         }
 
-        public void Update(User entity)
-        {
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
-        }
     }
 }

@@ -3,6 +3,8 @@ using BLL.Factories.Interface;
 using BLL.Factories;
 using BLL.Interfaces;
 using BLL.Services;
+using DAL.Entity;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +30,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapControllerRoute(
     name: "default",

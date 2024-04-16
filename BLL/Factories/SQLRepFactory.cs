@@ -10,85 +10,112 @@ using System.Threading.Tasks;
 using DAL.SQL;
 using DAL;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using DAL.Entity;
+using DAL.Interfaces;
 
 namespace BLL.Factories
 {
     public class SQLRepFactory : IFactoryRep
     {
-        private IMapper _mapper;
-        ApplicationDbContext context;
+        IAnimeAndCharacterService animeAndCharacterService;
+        IAnimeAndGenreService animeAndGenreService;
+        IAnimeAndStudioService animeAndStudioService;
+        IAnimeService animeService;
+        ICharacterService characterService;
+        ICommentService commentService;
+        IForumService forumService;
+        IGenreService genreService;
+        IMPAAService mPAAService;
+        IPersonalListService personalListService;
+        IReviewService reviewService;
+        IStudioService studioService;
+        IUserService userService;
 
-        public SQLRepFactory(IMapper mapper, string connString)
+        public SQLRepFactory(IAnimeAndCharacterService animeAndCharacterService, IAnimeAndGenreService animeAndGenreService, 
+            IAnimeAndStudioService animeAndStudioService, IAnimeService animeService, ICharacterService characterService, ICommentService commentService, 
+            IForumService forumService, IGenreService genreService, IMPAAService mPAAService, IPersonalListService personalListService,
+            IReviewService reviewService, IStudioService studioService, IUserService userService)
         {
-            _mapper = mapper;
-            context = new ApplicationDbContext(new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseSqlServer(connString)
-                .Options);
+            this.userService = userService;
+            this.characterService = characterService;
+            this.commentService = commentService;
+            this.forumService = forumService;
+            this.genreService = genreService;
+            this.animeService = animeService;
+            this.animeAndCharacterService = animeAndCharacterService;
+            this.animeAndGenreService = animeAndGenreService;
+            this.animeAndStudioService = animeAndStudioService;
+            this.mPAAService = mPAAService;
+            this.personalListService = personalListService;
+            this.reviewService = reviewService;
+            this.studioService = studioService;
+
         }
 
         public IAnimeAndCharacterService CreateAnimeAndCharacterService()
         {
-            return new AnimeAndCharacterService(new AnimeAndCharacterRepository(context), _mapper);
+            return animeAndCharacterService;
         }
 
         public IAnimeAndGenreService CreateAnimeAndGenreService()
         {
-            return new AnimeAndGenreService(new AnimeAndGenreRepository(context), _mapper);
+            return animeAndGenreService;
         }
 
         public IAnimeAndStudioService CreateAnimeAndStudioService()
         {
-            return new AnimeAndStudioService(new AnimeAndStudioRepository(context), _mapper);
+            return animeAndStudioService;
         }
 
         public IAnimeService CreateAnimeRepository()
         {
-            return new AnimeService(new AnimeRepository(context), _mapper);
+            return animeService;
         }
 
         public ICharacterService CreateCharacterRepository()
         {
-            return new CharacterService(new CharacterRepository(context), _mapper);
+            return characterService;
         }
 
         public ICommentService CreateCommentRepository()
         {
-            return new CommentService(new  CommentRepository(context), _mapper);
+            return commentService;
         }
 
         public IForumService CreateForumRepository()
         {
-            return new ForumService(new  ForumRepository(context), _mapper);
+            return forumService;
         }
 
         public IGenreService CreateGenreRepository()
         {
-            return new GenreService(new GenreRepository(context), _mapper);
+            return genreService;
         }
 
         public IMPAAService CreateMPAARepository()
         {
-            return new MPAAService(new MPAARepository(context), _mapper);
+            return mPAAService;
         }
 
         public IPersonalListService CreatePersonalListRepository()
         {
-            return new PersonalListService(new PersonalListRepository(context), _mapper);
+            return personalListService;
         }
 
         public IReviewService CreateReviewRepository()
         {
-            return new ReviewService(new  ReviewRepository(context), _mapper);
+            return reviewService;
         }
 
         public IStudioService CreateStudioRepository()
         {
-            return new StudioService(new  StudioRepository(context), _mapper);
+            return studioService;
         }
 
         public IUserService CreateUserService()
         {
-            return new UserService(new UserRepository(context), _mapper);
+            return userService;
         }
     }
 }

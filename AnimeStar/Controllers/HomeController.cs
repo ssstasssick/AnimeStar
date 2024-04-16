@@ -6,6 +6,7 @@ using BLL.Factories.Interface;
 using BLL.ImgProviders;
 using BLL.Interfaces;
 using BLL.Services;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -14,29 +15,35 @@ namespace AnimeStar.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IFactoryRep _factory;
         private readonly IAnimeImagePathProvider _animeImagePathProvider;
-
-        public HomeController(ILogger<HomeController> logger, IFactoryRep factory, IAnimeImagePathProvider animeImagePathProvider)
+        private readonly IAnimeService _animeService;
+        private readonly UserManager<UserDTO> _userManager;
+        public HomeController(ILogger<HomeController> logger, IFactoryRep factory, IAnimeImagePathProvider animeImagePathProvider, UserManager<UserDTO> userManager)
         {
             _logger = logger;
-            _factory = factory;
             _animeImagePathProvider = animeImagePathProvider;
+            _animeService = factory.CreateAnimeRepository();
+            _userManager = userManager;
+
         }
 
         public IActionResult Index()
         {
-            List<AnimeDTO> latestAnimes = _factory.CreateAnimeRepository().GetAll()
-                                                    .OrderByDescending(a => a.ReleaseDate)
-                                                    .Take(5)
-                                                    .Select(a =>
-                                                    {
-                                                        a.ImgPath = _animeImagePathProvider.GetAnimeImagePath(a.PictureName);
-                                                        return a;
-                                                    })
-                                                    .ToList();
+            
+
+            IEnumerable<AnimeDTO> latestAnime = _animeService.GetLatest(5);
+
+            IEnumerable<AnimeDTO> bestAnime = _animeService.GetBest(9);
+
+            latestAnime = _animeService.ConnectImg(_animeImagePathProvider, latestAnime);
+
+            bestAnime = _animeService.ConnectImg(_animeImagePathProvider, bestAnime);
                                                     
-            ViewBag.LatestAnime = latestAnimes;
+            ViewBag.LatestAnime = latestAnime;
+
+            ViewBag.BestAnime = bestAnime;
+
+
 
             return View();
         }
