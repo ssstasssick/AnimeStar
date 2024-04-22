@@ -22,12 +22,12 @@ namespace BLL.ImgProviders
 
         public string GetCharacterImagePath(string characterName)
         {
-            return Path.Combine(_rootPath,"characters", characterName);
+            return _rootPath + "/characters/" + characterName;
         }
 
         public string GetStudioImagePath(string studioName)
         {
-            return Path.Combine(_rootPath,"studios",studioName);
+            return _rootPath + "/studios/" + studioName;
         }
     }
 }

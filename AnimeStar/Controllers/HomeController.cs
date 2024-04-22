@@ -31,13 +31,9 @@ namespace AnimeStar.Controllers
         {
             
 
-            IEnumerable<AnimeDTO> latestAnime = _animeService.GetLatest(5);
+            IEnumerable<AnimeDTO> latestAnime = (IEnumerable<AnimeDTO>)_animeService.GetLatest(5).Select(a => _animeService.ConnectImg(_animeImagePathProvider, a));
 
-            IEnumerable<AnimeDTO> bestAnime = _animeService.GetBest(9);
-
-            latestAnime = _animeService.ConnectImg(_animeImagePathProvider, latestAnime);
-
-            bestAnime = _animeService.ConnectImg(_animeImagePathProvider, bestAnime);
+            IEnumerable<AnimeDTO> bestAnime = (IEnumerable<AnimeDTO>)_animeService.GetBest(9).Select(a => _animeService.ConnectImg(_animeImagePathProvider, a));
                                                     
             ViewBag.LatestAnime = latestAnime;
 
@@ -46,6 +42,27 @@ namespace AnimeStar.Controllers
 
 
             return View();
+        }
+
+        public IActionResult AnimeDetails(int id)
+        {
+            AnimeDTO anime = _animeService.ConnectImg(_animeImagePathProvider, _animeService.Get(id));
+            if (anime == null)
+            {
+                return NotFound();
+            }
+            anime = _animeService.LoadPageInf(anime);
+            anime.Characters = anime.Characters.Select(c =>
+            {
+                c.ImgName = _animeImagePathProvider.GetCharacterImagePath(c.ImgName);
+                return c;
+            }).ToList();
+            anime.Studios = anime.Studios.Select(s =>
+            {
+                s.ImgName = _animeImagePathProvider.GetStudioImagePath(s.ImgName);
+                return s;
+            }).ToList();
+            return View("Views/Details/AnimeDetails.cshtml", anime);
         }
 
         public IActionResult Privacy()

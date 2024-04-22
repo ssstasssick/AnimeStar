@@ -1,4 +1,4 @@
-﻿@{
+﻿ @{
     ViewData["Title"] = "Home Page";
 }
 
@@ -9,15 +9,19 @@
     <div class="row">
         @foreach (var anime in ViewBag.LatestAnime)
         {
+
             <div class="col-md-2 mb-4">
-                <div class="card">
-                    <img src="@anime.ImgPath" class="card-img-top" alt="@anime.Title">
-                    <div class="card-body">
-                        <h5 class="card-title">@anime.Title</h5>
-                        <p class="card-text">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
+                <a class="no-decoration" href="@Url.Action("AnimeDetails", "Home", new { id = anime.Id})">
+                    <div class="card">
+                        <img src="@anime.ImgPath" class="card-img-top" alt="@anime.Title">
+                        <div class="card-body">
+                            <h5 class="card-title">@anime.Title</h5>
+                            <p class="card-text">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
+
         }
     </div>
     <div class="row align-items-start border-radius:0.25rem">
@@ -103,6 +107,7 @@
         @foreach (var anime in ViewBag.BestAnime)
         {
             <div class="col-md-4 mb-4">
+                <a class="no-decoration" href="@Url.Action("AnimeDetails", "Home", new { id = anime.Id})">
                 <div class="minicard">
                     <img src="@anime.ImgPath" class="minicard-img" alt="@anime.Title">
                     <div class="minicard-info">
@@ -110,6 +115,7 @@
                         <p class="minicard-text">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
                     </div>
                 </div>
+                </a>
             </div>
         }
     </div>

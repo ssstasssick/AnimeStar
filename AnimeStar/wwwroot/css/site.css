@@ -23,22 +23,24 @@ body {
     background-image: url('../img/bg/patternblackstar.png');
 }
 
+/*Блок аниме*/
+
 .card {
     border: 1px solid #dee2e6;
     border-radius: 0.25rem;
     box-shadow: 0px 1px 10px rgba(255, 255, 255, 1);
     transition: all 0.3s ease;
     width: 100%; /* Ширина блока на 100% */
-    height: 400px; /* Задайте фиксированную высоту для карточек */
+    height: 300px; /* Задайте фиксированную высоту для карточек */
     overflow: hidden; /* Скрыть содержимое, выходящее за пределы карточки */
 }
 
     .card:hover {
-        box-shadow: 0 8px 12px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 0px 15px rgb(246, 115, 250);
     }
 
 .card-img-top {
-    height: 300px; /* Высота изображения */
+    height: 200px; /* Высота изображения */
     object-fit: cover; /* Заполнение изображения в пределах размеров блока */
 }
 
@@ -52,7 +54,23 @@ body {
 
 .card-text {
     font-size: 0.9rem;
-    color: #6c757d;
+    text-decoration:none;
+    transition: all, 0.3s, ease;
+}
+
+.no-decoration {
+    text-decoration: none;
+    color: inherit; /* чтобы сохранить цвет текста */
+}
+
+    .no-decoration:hover {
+        transition: all, 0.3s, ease;
+        color: blueviolet;
+    }
+
+a.animeHead:hover {
+    
+    color: blueviolet
 }
 
 .animeHead {
@@ -182,3 +200,32 @@ header {
     .btn-outline-primary:active {
         border-color: rgb(246, 115, 250);
     }
+
+/*Информация об аниме*/
+
+.info {
+    font-size: 1rem;
+    --bs-link-color-rgb: 110, 168, 254;
+    --bs-code-color: #e685b5;
+    padding: 0.1rem;
+    margin-top: 0.75rem;
+    margin-bottom: 1rem;
+    color: #eda9ff;
+    border-left: 0.3rem solid;
+    background-color: #330033;
+    border-radius: 0.2rem;
+}
+
+.image {
+    height: 300px;
+    object-fit: cover;
+}
+
+.fullInfAboutAnime {
+    border-radius: 0.3rem;
+    padding-top: 1rem;
+    background-color: rgba(255,255,255, 0.2);
+    backdrop-filter: blur(0.1rem);
+    box-shadow: 0 0 1rem rgba(215 105 189, 0.5);
+    width: 100%;
+}

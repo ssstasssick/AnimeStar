@@ -1,0 +1,101 @@
+﻿@model BLL.Entity.AnimeDTO
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.Title - Подробная информация</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h1 class="text-white">@Model.Title</h1>
+        </div>
+        <div class="row fullInfAboutAnime">
+            <div class="col-4">
+                <img src="@Model.ImgPath" class="image" alt="@Model.Title">
+            </div>
+            <div class="col-8 about container">
+                <div class="cc row">
+                   <div class="info-left col-sm">
+                        <div class="info">
+                            Информация
+                        </div>
+                        <div class="text-white">
+                            <div class="row">
+                                <div class="col">
+                                    Тип: @Model.TypeOfAnime
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Эпизоды: @Model.NumberOfEpisodes
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    Статус: @Model.AnimeState
+                                </div>
+                            </div>
+                            <div class = "row">
+                                <div class="col">Жанры:</div>
+                                @foreach (var genre in @Model.Genres)
+                                {
+                                    <div class="rightPadding col">@genre.Name</div>
+                                }
+                                <div class="row">
+                                    <div class="col">
+                                        Рейтинг: @Model.MPAA.Name
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="info-right col-sm">
+                        <div class="info">
+                            <div class="row">
+                                <div class="">
+                                    Рейтинг
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row text-white">
+                            <div class="">
+                                @Model.AverageRating / 10
+                            </div>
+                        </div>
+                        <div class="info">
+                            Студия
+                        </div>
+                        <div class="text-white">
+                            @Model.Studios.First().Name
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="description">
+                <div class="info">
+                    Описание
+                </div>
+                <div class="text-white">
+                    @Model.Description
+                </div>
+            </div>
+            <div class="description">
+                <div class="info">
+                    Персонажи
+                </div>
+                <div class="row">
+                    @foreach (var character in Model.Characters)
+                    {
+                        <div class="col text-white">
+                            @character.Name
+                        </div>
+                    }
+                </div>
+                
+            </div>
+        </div>
+       
+    </div>
+</body>
+</html>

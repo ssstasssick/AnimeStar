@@ -12,6 +12,7 @@ namespace BLL.Interfaces
     {
         public IEnumerable<AnimeDTO> GetBest(int animeCount);
         public IEnumerable<AnimeDTO> GetLatest(int animeCount);
-        public IEnumerable<AnimeDTO> ConnectImg(IAnimeImagePathProvider animeImagePathProvider, IEnumerable<AnimeDTO> animeList);
+        public AnimeDTO ConnectImg(IAnimeImagePathProvider animeImagePathProvider, AnimeDTO animeList);
+        public AnimeDTO LoadPageInf(AnimeDTO anime);
     }
 }

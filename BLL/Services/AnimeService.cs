@@ -18,12 +18,21 @@ namespace BLL.Services
     public class AnimeService : IAnimeService
     {
         private readonly IAnimeRepository _animeRepository;
+        private readonly IMPAARepository _mpaaRepository;
+        private readonly IAnimeAndCharacterRepository _animeAndCharacterService;
+        private readonly IAnimeAndGenreRepository _animeAndGenreRepository;
+        private readonly IAnimeAndStudioRepository _animeAndStudioRepository;
         private readonly IMapper _mapper;
 
-        public AnimeService(IAnimeRepository animeRepository, IMapper mapper)
+        public AnimeService(IAnimeRepository animeRepository, IMapper mapper, IAnimeAndCharacterRepository animeAndCharacterRepository, 
+            IAnimeAndGenreRepository animeAndGenreRepository, IAnimeAndStudioRepository animeAndStudioRepository, IMPAARepository mPAARepository)
         {
             _animeRepository = animeRepository;
             _mapper = mapper;
+            _animeAndCharacterService = animeAndCharacterRepository;
+            _animeAndGenreRepository = animeAndGenreRepository;
+            _animeAndStudioRepository = animeAndStudioRepository;
+            _mpaaRepository = mPAARepository;
         }
 
         public void Create(AnimeDTO entity)
@@ -43,7 +52,7 @@ namespace BLL.Services
             return anime.Select(anime => _mapper.Map<AnimeDTO>(anime));
         }
 
-        public AnimeDTO Get(int id) 
+        public AnimeDTO Get(int id)
         {
             return _mapper.Map<AnimeDTO>(_animeRepository.Get(id));
         }
@@ -73,16 +82,12 @@ namespace BLL.Services
                 .ToList();
         }
 
-        public IEnumerable<AnimeDTO> ConnectImg(IAnimeImagePathProvider animeImagePathProvider, IEnumerable<AnimeDTO> animeList)
+        public AnimeDTO ConnectImg(IAnimeImagePathProvider animeImagePathProvider, AnimeDTO anime)
         {
-            return animeList
-                 .OrderByDescending(a => a.ReleaseDate)
-                 .Take(5)
-                 .Select(a =>
-                 {
-                    a.ImgPath = animeImagePathProvider.GetAnimeImagePath(a.PictureName);
-                    return a;
-                 });
+
+            anime.ImgPath = animeImagePathProvider.GetAnimeImagePath(anime.PictureName);
+            return anime;
+
         }
 
         public void UpdateAverageRating(int animeId)
@@ -106,5 +111,14 @@ namespace BLL.Services
             //}
         }
 
+        public AnimeDTO LoadPageInf(AnimeDTO anime)
+        {
+            anime.Characters = _animeAndCharacterService.Find(anime.Id).Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
+            anime.Studios = _animeAndStudioRepository.Find(anime.Id).Select(s => _mapper.Map<StudioDTO>(s)).ToList();
+            anime.MPAA = _mpaaRepository.Find(a => a.Id == anime.MPAAId).Select(m => _mapper.Map<MPAA_DTO>(m)).First();
+            anime.Genres = _animeAndGenreRepository.Find(anime.Id).Select(g => _mapper.Map<GenreDTO>(g)).ToList();
+            return anime;
+
+        }
     }
 }
