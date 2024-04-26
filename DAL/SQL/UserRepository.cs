@@ -13,9 +13,14 @@ namespace DAL.SQL
     public class UserRepository : IUserRepository
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        public UserRepository(UserManager<ApplicationUser> userManager, ApplicationDbContext context)
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly ApplicationDbContext _context;
+        public UserRepository(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+            ApplicationDbContext context)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
+            _context = context;
         }
 
         public async Task ChangePassword(ApplicationUser user, string password)
@@ -52,6 +57,26 @@ namespace DAL.SQL
         public async Task<IEnumerable<ApplicationUser>> GetAll()
         {
             return await Task.FromResult<IEnumerable<ApplicationUser>>(_userManager.Users);
+        }
+
+        public async Task<bool> SignIn(string name, string password)
+        {
+            var result = await _signInManager.PasswordSignInAsync(name, password, true, lockoutOnFailure: false);
+            if (!result.Succeeded)
+            {
+                throw new InvalidOperationException("Failed to sign in.");
+            }
+            return result.Succeeded;
+        }
+
+        public async Task<ApplicationUser>FindByNameAsync(string userName)
+        {
+            return await _userManager.FindByNameAsync(userName);
+        }
+
+        public async Task<ApplicationUser> GetUserByIdAsync(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
         }
 
     }

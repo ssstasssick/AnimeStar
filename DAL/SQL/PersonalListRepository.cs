@@ -49,8 +49,12 @@ namespace DAL.SQL
 
         public void Update(PersonalList entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            var existingEntity = _context.PersonalLists.Find(entity.Id);
+            if (existingEntity != null)
+            {
+                _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                _context.SaveChanges();
+            }
         }
     }
 }

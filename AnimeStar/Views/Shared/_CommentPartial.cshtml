@@ -1,0 +1,14 @@
+﻿<div class="comment mb-4">
+    <div class="d-flex justify-content-between">
+        <div class="d-flex flex-row align-items-center">
+            @if (Model.UserName != null)
+            {
+                <p class="mb-0 ms-2">@Model.UserName</p>
+            }
+        </div>
+        <p class="small mb-0">@Model.CreationDate</p>
+    </div>
+    <div class="pl-2 ms-2" style="overflow: hidden; font-size: 14px;">
+        <p>@Model.Text</p>
+    </div>
+</div>

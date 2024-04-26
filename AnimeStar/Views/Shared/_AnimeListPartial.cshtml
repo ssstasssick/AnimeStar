@@ -1,0 +1,8 @@
+﻿@foreach (var anime in Model)
+{
+    <div>
+        <a class="no-decoration" href="@Url.Action("AnimeDetails", "Home", new { id = anime.AnimeId})">
+            <h6 class="p-3">@anime.Anime.Title</h6>
+        </a>
+    </div>
+}

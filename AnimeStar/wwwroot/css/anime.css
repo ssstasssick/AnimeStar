@@ -28,4 +28,8 @@
     padding-left:1rem;
 }
 
-
+/* Изменение цвета текста */
+.newFon {
+    color: rgb(250 190 255);
+    background-color: rgb(255 38 240);
+}

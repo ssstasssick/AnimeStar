@@ -1,4 +1,4 @@
-﻿ @{
+﻿@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -108,13 +108,14 @@
         {
             <div class="col-md-4 mb-4">
                 <a class="no-decoration" href="@Url.Action("AnimeDetails", "Home", new { id = anime.Id})">
-                <div class="minicard">
-                    <img src="@anime.ImgPath" class="minicard-img" alt="@anime.Title">
-                    <div class="minicard-info">
-                        <h5 class="minicard-title">@anime.Title</h5>
-                        <p class="minicard-text">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
+                    <div class="minicard">
+                        <img src="@anime.ImgPath" class="minicard-img" alt="@anime.Title">
+                        <div class="minicard-info">
+                            <h5 class="minicard-title">@anime.Title</h5>
+                            <p class="minicard-text text-white">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
+                            <p class="minicard-text text-white">Оценка: @anime.AverageRating</p>
+                        </div>
                     </div>
-                </div>
                 </a>
             </div>
         }

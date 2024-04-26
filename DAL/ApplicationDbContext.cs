@@ -113,6 +113,10 @@ namespace DAL
                 .WithMany(a => a.Forums)
                 .HasForeignKey(f => f.AnimeId)
                 .OnDelete(DeleteBehavior.Restrict); // Изменено с DeleteBehavior.SetNull на DeleteBehavior.Restrict
+
+            modelBuilder.Entity<Comment>()
+                .Property(c => c.ForumId)
+                .IsRequired(false);
         }
 
 

@@ -30,6 +30,7 @@ namespace DAL.SQL
             if (comment != null)
             {
                 _context.Comments.Remove(comment);
+                _context.SaveChanges();
             }
         }
 

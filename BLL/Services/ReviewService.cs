@@ -15,9 +15,10 @@ namespace BLL.Services
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         
-        public ReviewService(IReviewRepository reviewRepository, IMapper mapper)
+        public ReviewService(IReviewRepository reviewRepository, IUserRepository userRepository,IMapper mapper)
         {
             _reviewRepository = reviewRepository;
             _mapper = mapper;
@@ -40,6 +41,11 @@ namespace BLL.Services
             return reviews.Select(r => _mapper.Map<ReviewDTO>(r));
         }
 
+        //public ReviewDTO FindByUserId(int userId)
+        //{
+            
+        //}
+
         public ReviewDTO Get(int id)
         {
             return _mapper.Map<ReviewDTO>(_reviewRepository.Get(id));
@@ -54,5 +60,7 @@ namespace BLL.Services
         {
             _reviewRepository.Update(_mapper.Map<Review>(entity));
         }
+
+        
     }
 }

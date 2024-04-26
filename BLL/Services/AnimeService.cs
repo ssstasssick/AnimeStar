@@ -3,9 +3,11 @@ using BLL.Entity;
 using BLL.ImgProviders;
 using BLL.Interfaces;
 using DAL.Entity;
+using DAL.ImgOutput.Interface;
 using DAL.ImgOutput.wwwroot;
 using DAL.Interfaces;
 using DAL.SQL;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -22,10 +24,15 @@ namespace BLL.Services
         private readonly IAnimeAndCharacterRepository _animeAndCharacterService;
         private readonly IAnimeAndGenreRepository _animeAndGenreRepository;
         private readonly IAnimeAndStudioRepository _animeAndStudioRepository;
+        private readonly ICommentRepository _commentRepository;
+        private readonly IUserRepository _userRepository;
+        private readonly IReviewRepository _reviewRepository;
+        private readonly IPersonalListRepository _personalListRepository;
         private readonly IMapper _mapper;
 
-        public AnimeService(IAnimeRepository animeRepository, IMapper mapper, IAnimeAndCharacterRepository animeAndCharacterRepository, 
-            IAnimeAndGenreRepository animeAndGenreRepository, IAnimeAndStudioRepository animeAndStudioRepository, IMPAARepository mPAARepository)
+        public AnimeService(IAnimeRepository animeRepository, IMapper mapper, IAnimeAndCharacterRepository animeAndCharacterRepository,
+            IAnimeAndGenreRepository animeAndGenreRepository, IAnimeAndStudioRepository animeAndStudioRepository, IMPAARepository mPAARepository, 
+            ICommentRepository commentRepository, IUserRepository userRepository, IReviewRepository reviewRepository, IPersonalListRepository personalListRepository)
         {
             _animeRepository = animeRepository;
             _mapper = mapper;
@@ -33,6 +40,10 @@ namespace BLL.Services
             _animeAndGenreRepository = animeAndGenreRepository;
             _animeAndStudioRepository = animeAndStudioRepository;
             _mpaaRepository = mPAARepository;
+            _commentRepository = commentRepository;
+            _userRepository = userRepository;
+            _reviewRepository = reviewRepository;
+            _personalListRepository = personalListRepository;
         }
 
         public void Create(AnimeDTO entity)
@@ -69,9 +80,42 @@ namespace BLL.Services
 
         public IEnumerable<AnimeDTO> GetBest(int animeCount)
         {
-            return GetAll()
+            var reviews = _reviewRepository.GetAll();
+
+            // Получить все аниме
+            var allAnime = _animeRepository.GetAll();
+
+            // Создать словарь для хранения средних рейтингов для каждого аниме
+            var averageRatings = new Dictionary<int, double>();
+
+            // Рассчитать средний рейтинг для каждого аниме
+            foreach (var anime in allAnime)
+            {
+                // Получить отзывы для текущего аниме
+                var animeReviews = reviews.Where(r => r.AnimeId == anime.Id).Select(r => _mapper.Map<ReviewDTO>(r)).ToList();
+
+                // Рассчитать средний рейтинг для текущего аниме
+                var averageRating = CalculateAverageRating(animeReviews);
+
+                // Сохранить средний рейтинг в словаре
+                averageRatings.Add(anime.Id, averageRating);
+            }
+
+            // Установить средние рейтинги для каждого аниме
+            foreach (var anime in allAnime)
+            {
+                anime.AverageRating = averageRatings[anime.Id];
+            }
+
+            // Отсортировать аниме по среднему рейтингу и взять указанное количество
+            var topAnime = allAnime
                 .OrderByDescending(anime => anime.AverageRating)
-                .Take(animeCount);
+                .Take(animeCount)
+                .Select(a => _mapper.Map<AnimeDTO>(a));
+                 
+
+            // Вернуть результат
+            return topAnime;
         }
 
         public IEnumerable<AnimeDTO> GetLatest(int animeCount)
@@ -82,10 +126,20 @@ namespace BLL.Services
                 .ToList();
         }
 
-        public AnimeDTO ConnectImg(IAnimeImagePathProvider animeImagePathProvider, AnimeDTO anime)
+        public AnimeDTO ConnectImg(ImgProviders.IAnimeImagePathProvider animeImagePathProvider, AnimeDTO anime)
         {
 
             anime.ImgPath = animeImagePathProvider.GetAnimeImagePath(anime.PictureName);
+            anime.Characters = anime.Characters.Select(c =>
+            {
+                c.ImgName = animeImagePathProvider.GetCharacterImagePath(c.ImgName);
+                return c;
+            }).ToList();
+            anime.Studios = anime.Studios.Select(s =>
+            {
+                s.Description = animeImagePathProvider.GetStudioImagePath(s.Description);
+                return s;
+            }).ToList();
             return anime;
 
         }
@@ -111,14 +165,50 @@ namespace BLL.Services
             //}
         }
 
-        public AnimeDTO LoadPageInf(AnimeDTO anime)
+        public async Task<AnimeDTO> LoadPageInf(AnimeDTO anime)
         {
             anime.Characters = _animeAndCharacterService.Find(anime.Id).Select(c => _mapper.Map<CharacterDTO>(c)).ToList();
             anime.Studios = _animeAndStudioRepository.Find(anime.Id).Select(s => _mapper.Map<StudioDTO>(s)).ToList();
             anime.MPAA = _mpaaRepository.Find(a => a.Id == anime.MPAAId).Select(m => _mapper.Map<MPAA_DTO>(m)).First();
             anime.Genres = _animeAndGenreRepository.Find(anime.Id).Select(g => _mapper.Map<GenreDTO>(g)).ToList();
-            return anime;
+            anime.Comments = _commentRepository.Find(c => c.AnimeId == anime.Id).Select(c => _mapper.Map<CommentDTO>(c)).ToList();
 
+            // Перебираем комментарии и асинхронно получаем пользователя для каждого комментария
+            foreach (var comment in anime.Comments)
+            {
+                // Получаем пользователя асинхронно по его идентификатору
+                comment.User = _mapper.Map<UserDTO>(await _userRepository.GetUserByIdAsync(comment.UserId));
+                comment.UserName = comment.User.UserName;
+            }
+
+            anime.Reviews = _reviewRepository.Find(r => r.AnimeId == anime.Id)
+                .Select(r => _mapper.Map<ReviewDTO>(r))
+                .ToList();
+
+            anime.AverageRating = CalculateAverageRating(anime.Reviews.ToList());
+            anime.PersonalLists = _personalListRepository.Find(l => l.AnimeId == anime.Id).Select(l => _mapper.Map<PersonalListDTO>(l)).ToList();
+
+            return anime;
         }
+
+        public double CalculateAverageRating(List<ReviewDTO> reviews)
+        {
+            if (reviews == null || reviews.Count == 0)
+            {
+                return 0; // Если нет отзывов, средний рейтинг равен 0
+            }
+
+            // Вычисляем общую сумму оценок
+            double totalRating = 0;
+            foreach (var review in reviews)
+            {
+                totalRating += (double)review.Rating;
+            }
+
+            // Вычисляем средний рейтинг
+            double averageRating = totalRating / reviews.Count;
+            return averageRating;
+        }
+
     }
 }

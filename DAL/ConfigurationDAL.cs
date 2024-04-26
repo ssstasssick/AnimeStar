@@ -26,7 +26,8 @@ namespace DAL
 
             services.AddIdentityCore<ApplicationUser>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<SignInManager<ApplicationUser>>();
 
             services.AddScoped<IAnimeImagePathProvider>(provider =>
             {

@@ -1,0 +1,36 @@
+﻿@model BLL.Entity.CharacterDTO
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@Model.Name - Подробная информация</title>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h1 class="text-white">@Model.Name</h1>
+        </div>
+        <div class="row fullInfAboutAnime">
+            <div class="col-3">
+                <img src="@Model.ImgName" class="image" alt="@Model.Name">
+            </div>
+            <div class="col-8 about container">
+                <div class="cc row">
+                    <div class="info-left col-sm">
+                        <div class="info">
+                            Информация
+                        </div>
+                        <div class="text-white">
+                            <div class="row">
+                                <div class="col">
+                                    Тип: @Model.Description
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

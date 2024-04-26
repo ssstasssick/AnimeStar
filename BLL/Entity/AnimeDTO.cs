@@ -17,7 +17,8 @@ namespace BLL.Entity
         public string AnimeState { get; set; }
         public string ImgPath { get; set; }
         public double AverageRating { get; set; } = 0.0;
-
+        public double UserRating { get; set; } = 0.0;
+        public ICollection<CommentDTO> Comments { get; set; }
         public virtual ICollection<CharacterDTO> Characters { get; set; }
         public virtual ICollection<GenreDTO> Genres { get; set; }
         public virtual ICollection<StudioDTO> Studios { get; set; }

@@ -1,4 +1,5 @@
-﻿@model BLL.Entity.AnimeDTO
+﻿@using System.Security.Claims;
+@model BLL.Entity.AnimeDTO
 
 <!DOCTYPE html>
 <html>
@@ -11,44 +12,121 @@
             <h1 class="text-white">@Model.Title</h1>
         </div>
         <div class="row fullInfAboutAnime">
-            <div class="col-4">
+            <div class="col-3">
                 <img src="@Model.ImgPath" class="image" alt="@Model.Title">
+                <div class="text-center">
+                    @{
+                        int? userRating = 0; // Предполагаем, что оценка пользователя по умолчанию равна 0
+                                             // Найдем оценку пользователя для текущего аниме
+                        foreach (var review in Model.Reviews)
+                        {
+                            if (review.UserId == @User.FindFirstValue(ClaimTypes.NameIdentifier))
+                            {
+                                userRating = review.Rating;
+                                break; // Прерываем цикл, если нашли оценку пользователя
+                            }
+                        }
+                    }
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <form id="rating-form">
+                            <div class="form-group">
+                                <label class="text-white mb-1">Ваша оценка</label>
+                                <div class="star-rating">
+                                    <div class="star-rating__wrap">
+                                        <input class="star-rating__input" id="star-5" type="radio" name="rating" value="5" @(userRating == 5 ? "checked" : "")>
+                                        <label class="star-rating__ico fa fa-star-o fa-lg" for="star-5" title="Отлично"></label>
+                                        <input class="star-rating__input" id="star-4" type="radio" name="rating" value="4" @(userRating == 4 ? "checked" : "")>
+                                        <label class="star-rating__ico fa fa-star-o fa-lg" for="star-4" title="Хорошо"></label>
+                                        <input class="star-rating__input" id="star-3" type="radio" name="rating" value="3" @(userRating == 3 ? "checked" : "")>
+                                        <label class="star-rating__ico fa fa-star-o fa-lg" for="star-3" title="Удовлетворительно"></label>
+                                        <input class="star-rating__input" id="star-2" type="radio" name="rating" value="2" @(userRating == 2 ? "checked" : "")>
+                                        <label class="star-rating__ico fa fa-star-o fa-lg" for="star-2" title="Плохо"></label>
+                                        <input class="star-rating__input" id="star-1" type="radio" name="rating" value="1" @(userRating == 1 ? "checked" : "")>
+                                        <label class="star-rating__ico fa fa-star-o fa-lg" for="star-1" title="Ужасно"></label>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info mt-2" role="alert">
+                            Чтобы оценить это аниме, пожалуйста, <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+                        </div>
+                    }
+                </div>
             </div>
             <div class="col-8 about container">
                 <div class="cc row">
-                   <div class="info-left col-sm">
+                    <div class="info-left col-sm">
                         <div class="info">
                             Информация
                         </div>
                         <div class="text-white">
                             <div class="row">
-                                <div class="col">
+                                <div class="col mb-3">
                                     Тип: @Model.TypeOfAnime
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col">
+                                <div class="col mb-3">
                                     Эпизоды: @Model.NumberOfEpisodes
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col">
+                                <div class="col mb-3">
                                     Статус: @Model.AnimeState
                                 </div>
                             </div>
-                            <div class = "row">
+                            <div class="row mb-3">
                                 <div class="col">Жанры:</div>
                                 @foreach (var genre in @Model.Genres)
                                 {
                                     <div class="rightPadding col">@genre.Name</div>
                                 }
-                                <div class="row">
-                                    <div class="col">
-                                        Рейтинг: @Model.MPAA.Name
-                                    </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    Рейтинг: @Model.MPAA.Name
                                 </div>
                             </div>
                         </div>
+                        <div class="info">
+                            Мой статус просмотра
+                        </div>
+                        @{
+                            string state = null; // Предполагаем, что оценка пользователя по умолчанию равна 0
+                                                 // Найдем оценку пользователя для текущего аниме
+                            foreach (var personalList in Model.PersonalLists)
+                            {
+                                if (personalList.UserId == @User.FindFirstValue(ClaimTypes.NameIdentifier))
+                                {
+                                    state = personalList.State.ToString();
+                                    break; // Прерываем цикл, если нашли оценку пользователя
+                                }
+                            }
+                        }
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="list-group" id="list-tab" role="tablist">
+                                    <a class="list-group-item list-group-item-action newFon @(state == "Запланировано" ? "active" : "")" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-messages">Запланировано</a>
+                                    <a class="list-group-item list-group-item-action newFon @(state == "Смотрю" ? "active" : "")" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-messages">Смотрю</a>
+                                    <a class="list-group-item list-group-item-action newFon @(state == "Просмотрено" ? "active" : "")" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages">Просмотрено</a>
+                                    <a class="list-group-item list-group-item-action newFon @(state == "Отложено" ? "active" : "")" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Отложено</a>
+                                    <a class="list-group-item list-group-item-action newFon @(state == "Брошено" ? "active" : "")" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Брошено</a>
+                                </div>
+                            </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="alert alert-info mt-2" role="alert">
+                                Для добавления аниме в свой список <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+                            </div>
+                        }
                     </div>
                     <div class="info-right col-sm">
                         <div class="info">
@@ -59,16 +137,30 @@
                             </div>
                         </div>
                         <div class="row text-white">
-                            <div class="">
-                                @Model.AverageRating / 10
+                            <div class="text-center">
+                                @Model.AverageRating / 5
                             </div>
                         </div>
                         <div class="info">
                             Студия
                         </div>
-                        <div class="text-white">
-                            @Model.Studios.First().Name
+                        <div class="text-center">
+                            <div class="studio-card mb-2">
+                                @if (Model.Studios.Any())
+                                {
+                                    <img src="@Model.Studios.FirstOrDefault()?.Description" class="studio-img-top" alt="@Model.Studios.FirstOrDefault()?.Name">
+                                }
+                            </div>
+                            <div class="studio-title">
+                                @if (Model.Studios.FirstOrDefault() != null)
+                                {
+                                    <div class="studio-title">
+                                        @Model.Studios.FirstOrDefault().Name
+                                    </div>
+                                }
+                            </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -87,15 +179,71 @@
                 <div class="row">
                     @foreach (var character in Model.Characters)
                     {
-                        <div class="col text-white">
-                            @character.Name
+                        <div class="col-md-2 mb-4">
+                            <a class="no-decoration" href="@Url.Action("CharacterDetails", "Anime", character)">
+                                <div class="character-card">
+                                    <img src="@character.ImgName" class="character-img-top" alt="@character.Name">
+                                </div>
+                                <div class="character-title">
+                                    @character.Name
+                                </div>
+                            </a>
                         </div>
                     }
                 </div>
-                
+
+            </div>
+            <div class="description">
+                <div class="info">
+                    Форумы
+                </div>
+                <div class="text-white">
+                    @Model.Description
+                </div>
+                <div class="description">
+                    <div class="info">
+                        Рецензии
+                    </div>
+                    <div class="text-white">
+                        @Model.Description
+                    </div>
+                </div>
+                <!-- Комментарии -->
+                <div class="description">
+                    <div class="info">
+                        Комментарии
+                    </div>
+                    <!-- Список комментариев -->
+                    <div id="comments-container">
+                        @foreach (var comment in Model.Comments)
+                        {
+                            await Html.RenderPartialAsync("_CommentPartial", comment);
+                        }
+                        <script src="~/js/site.js"></script>
+                    </div>
+                    <!-- Проверяем, аутентифицирован ли пользователь -->
+                    @if (!User.Identity.IsAuthenticated)
+                    {
+                        <div class="alert alert-info" role="alert">
+                            Чтобы оставить комментарий, пожалуйста, <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+                        </div>
+                    }
+                    else
+                    {
+                        <!-- Форма для отправки комментария -->
+                        <form id="add-comment-form" method="post">
+                            <input type="hidden" name="AnimeId" value="@Model.Id" />
+                            <div class="form-group text-white">
+                                <label for="comment">Оставить комментарий:</label>
+                                <textarea class="form-control" id="comment" name="Text" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary mt-2">Отправить</button>
+                        </form>
+                    }
+                </div>
             </div>
         </div>
-       
+
     </div>
 </body>
 </html>

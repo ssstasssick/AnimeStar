@@ -4,6 +4,7 @@ using BLL.Interfaces;
 using DAL.Entity;
 using DAL.Interfaces;
 using DAL.SQL;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -46,6 +47,21 @@ namespace BLL.Services
         public async Task<IEnumerable<UserDTO>> GetAllUsers()
         {
             return (await userRepository.GetAll()).Select(u => _mapper.Map<UserDTO>(u));
+        }
+
+        public async Task<bool> SignIn(string name, string password)
+        {
+            return await userRepository.SignIn(name, password);  
+        }
+
+        public async Task<UserDTO> FindByName(string name)
+        {
+            return _mapper.Map<UserDTO>(await userRepository.FindByNameAsync(name));
+        }
+
+        public async Task<UserDTO> GetUserByIdAsync(string userId)
+        {
+            return _mapper.Map<UserDTO>(await userRepository.GetUserByIdAsync(userId));
         }
     }
 }

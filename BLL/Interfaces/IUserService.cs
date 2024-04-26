@@ -16,5 +16,8 @@ namespace BLL.Interfaces
         Task DeleteUser(UserDTO  user);
         Task<UserDTO> GetUserByEmail(string email);
         Task<IEnumerable<UserDTO>> GetAllUsers();
+        Task<bool> SignIn(string email, string password);
+        Task<UserDTO> FindByName(string username);
+        Task<UserDTO> GetUserByIdAsync(string userId);
     }
 }

@@ -9,5 +9,7 @@ namespace BLL.Interfaces
 {
     public interface IReviewService : IService<ReviewDTO>
     {
+        //public ReviewDTO FindByUserId(int userId);
+        
     }
 }

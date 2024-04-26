@@ -1,21 +1,20 @@
-:root{
-
+:root {
 }
 
 
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -31,7 +30,7 @@ body {
     box-shadow: 0px 1px 10px rgba(255, 255, 255, 1);
     transition: all 0.3s ease;
     width: 100%; /* Ширина блока на 100% */
-    height: 300px; /* Задайте фиксированную высоту для карточек */
+    height: 350px; /* Задайте фиксированную высоту для карточек */
     overflow: hidden; /* Скрыть содержимое, выходящее за пределы карточки */
 }
 
@@ -40,7 +39,7 @@ body {
     }
 
 .card-img-top {
-    height: 200px; /* Высота изображения */
+    height: 250px; /* Высота изображения */
     object-fit: cover; /* Заполнение изображения в пределах размеров блока */
 }
 
@@ -54,7 +53,7 @@ body {
 
 .card-text {
     font-size: 0.9rem;
-    text-decoration:none;
+    text-decoration: none;
     transition: all, 0.3s, ease;
 }
 
@@ -69,7 +68,6 @@ body {
     }
 
 a.animeHead:hover {
-    
     color: blueviolet
 }
 
@@ -115,7 +113,7 @@ header {
 .bg-callout {
     --bs-link-color-rgb: 110, 168, 254;
     --bs-code-color: #e685b5;
-    padding: 0.3rem;
+    padding: 0.5rem;
     margin-top: 0.75rem;
     margin-bottom: 1rem;
     color: #eda9ff;
@@ -147,7 +145,6 @@ header {
     --bd-callout-color: var(--bs-danger-text-emphasis);
     --bd-callout-bg: var(--bs-danger-bg-subtle);
     --bd-callout-border: var(--bs-danger-border-subtle);
-
 }
 
 /*Регистрация*/
@@ -162,7 +159,6 @@ header {
     height: 100%;
     overflow: auto;
     outline: 0;
-
 }
 
 .modal-dialog {
@@ -208,6 +204,7 @@ header {
     --bs-link-color-rgb: 110, 168, 254;
     --bs-code-color: #e685b5;
     padding: 0.1rem;
+    padding-left: 0.3rem;
     margin-top: 0.75rem;
     margin-bottom: 1rem;
     color: #eda9ff;
@@ -217,7 +214,8 @@ header {
 }
 
 .image {
-    height: 300px;
+    width: 100%;
+    height: auto;
     object-fit: cover;
 }
 
@@ -228,4 +226,103 @@ header {
     backdrop-filter: blur(0.1rem);
     box-shadow: 0 0 1rem rgba(215 105 189, 0.5);
     width: 100%;
+}
+
+/*Карточка персонажа*/
+
+.character-card {
+    border: 0px;
+    width: 100%; /* Ширина блока на 100% */
+    height: 200px; /* Задайте фиксированную высоту для карточек */
+    overflow: hidden; /* Скрыть содержимое, выходящее за пределы карточки */
+}
+
+.character-img-top {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Заполнение изображения в пределах размеров блока */
+}
+
+.character-title {
+    color: whitesmoke;
+    font-size: 1.1rem;
+    font-weight: bold;
+    overflow: hidden; /* Скрыть содержимое, выходящее за пределы карточки */
+    white-space: nowrap; /* Предотвратить перенос текста на новую строку */
+    text-overflow: ellipsis; /* Заменить выходящий текст многоточием */
+}
+
+/*Карточка студии*/
+
+.studio-card {
+    border: 0px;
+    width: 100%; /* Ширина блока на 100% */
+    height: 150px; /* Задайте фиксированную высоту для карточек */
+    overflow: hidden; /* Скрыть содержимое, выходящее за пределы карточки */
+}
+
+.studio-img-top {
+    width: auto;
+    height: 100%;
+}
+
+.studio-title {
+    color: whitesmoke;
+    font-size: 1.1rem;
+    font-weight: bold;
+    overflow: hidden; /* Скрыть содержимое, выходящее за пределы карточки */
+    white-space: nowrap; /* Предотвратить перенос текста на новую строку */
+    text-overflow: ellipsis; /* Заменить выходящий текст многоточием */
+}
+/*Комментарии*/
+
+.comment {
+    height: auto;
+    border: 1px solid white;
+    border-radius: 0.25rem;
+    background: rgba(255, 255, 255);
+}
+
+.newFon {
+    background-color: #eda9ff;
+    color: #330033;
+    border: none;
+    text-align:center;
+    padding: 0.1rem;
+}
+    .newFon.active {
+        background-color: #330033;
+    }
+    .newFon:hover {
+        background-color: #330033;
+        color: whitesmoke;
+    }
+
+.alert-info {
+    color: #330033;
+    background-color: #eda9ff;
+    border-color: #eda9ff;
+}
+
+.a-alert-info {
+    color: #330033;
+}
+
+.a-alert-info:hover{
+    color: blueviolet;
+}
+
+.accordion-button {
+    background-color: #eda9ff;
+    border-color: #330033;
+}
+
+    .accordion-button:not(.collapsed) {
+        color: #330033;
+        background-color: #eda9ff;
+        box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .125);
+    }
+
+.accordion-body {
+    background-color: #ffe6ff;
 }

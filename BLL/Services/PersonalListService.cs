@@ -54,5 +54,6 @@ namespace BLL.Services
         {
             _personalListRepository.Update(_mapper.Map<PersonalList>(entity));
         }
+
     }
 }

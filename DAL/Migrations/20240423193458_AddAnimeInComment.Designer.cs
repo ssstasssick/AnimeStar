@@ -4,6 +4,7 @@ using DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423193458_AddAnimeInComment")]
+    partial class AddAnimeInComment
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -237,6 +239,9 @@ namespace DAL.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("Anime")
+                        .HasColumnType("int");
+
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
@@ -255,8 +260,6 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AnimeId");
 
                     b.HasIndex("ForumId");
 
@@ -371,10 +374,11 @@ namespace DAL.Migrations
                     b.Property<int>("AnimeId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("Rating")
+                    b.Property<int>("Rating")
                         .HasColumnType("int");
 
                     b.Property<string>("Text")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
@@ -614,12 +618,6 @@ namespace DAL.Migrations
 
             modelBuilder.Entity("DAL.Entity.Comment", b =>
                 {
-                    b.HasOne("DAL.Entity.Anime", "Anime")
-                        .WithMany()
-                        .HasForeignKey("AnimeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DAL.Entity.Forum", "Forum")
                         .WithMany("Comments")
                         .HasForeignKey("ForumId");
@@ -629,8 +627,6 @@ namespace DAL.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
-
-                    b.Navigation("Anime");
 
                     b.Navigation("Forum");
 

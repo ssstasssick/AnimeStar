@@ -62,7 +62,8 @@ namespace BLL
 
             services.AddIdentityCore<UserDTO>()
                 .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddSignInManager<SignInManager<UserDTO>>();
 
             services.AddScoped<IFactoryRep, SQLRepFactory>();
 

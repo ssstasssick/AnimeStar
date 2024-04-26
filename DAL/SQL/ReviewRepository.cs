@@ -45,8 +45,13 @@ namespace DAL.SQL
 
         public void Update(Review entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            var existingEntity = _context.Reviews.Find(entity.Id);
+            if (existingEntity != null)
+            {
+                // Копируем значения из новой сущности в существующую
+                _context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                _context.SaveChanges();
+            }
         }
     }
 }

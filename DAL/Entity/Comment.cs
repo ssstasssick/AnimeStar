@@ -13,7 +13,9 @@ namespace DAL.Entity
         public DateTime CreationDate { get; set; }
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
-        public int ForumId { get; set; }
+        public int? ForumId { get; set; }
         public Forum Forum { get; set; }
+        public int AnimeId { get; set; }
+        public Anime Anime { get; set; }
     }
 }

@@ -6,7 +6,9 @@
     <title>@ViewData["Title"] - AnimeStar</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/star.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/miniBlockAnime.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/AnimeStar.styles.css" asp-append-version="true" />
 </head>
 <body>
@@ -18,7 +20,7 @@
                 </a>
 
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center align-items-center mb-md-0">
-                    <li><a href="#" class="nav-link py-0 text-secondary animeHead">AnimeStar</a></li>
+                    <li><a href="/" class="nav-link py-0 text-secondary animeHead">AnimeStar</a></li>
                     <li class="nav-item dropdown">
                         <button class="btn btn-link nav-link me-2 py-2 px-0 px-lg-2 dropdown-toggle" type="button" id="navbarDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                             Главная
@@ -50,16 +52,37 @@
                     </li>
                     <li>
                         <a class="align-items-center me-3" href="#"><img src="/img/icons/mail.png" /></a>
-                    </li>                   
+                    </li>
                 </ul>
-                <div class="text-end">
-                    <form method="post" asp-controller="Account" asp-action="Register">
-                        <button type="button" class="btn btn-outline-light me-2">Login</button>
-                    </form>
-                    <form method="post" asp-controller="Account" asp-action="Register">
-                        <button type="submit" class="btn btn-warning">Sign-up</button>
-                    </form>
-                </div>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <div class="row text-end">
+                        <div class="col-5">
+                            <form method="post" asp-controller="Account" asp-action="Logout">
+                                <button type="submit" class="btn btn-outline-light me-2">Logout</button>
+                            </form>
+                        </div>
+                        <div class="col-7">
+                            <a href="/Account/UserInfo" class="text-light me-2 text-decoration-none">Личный кабинет @User.Identity.Name</a>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row text-end">
+                        <div class="col-5">
+                            <form method="post" asp-controller="Account" asp-action="Authorization">
+                                <button type="submit" class="btn btn-outline-light me-2">Login</button>
+                            </form>
+                        </div>
+                        <div class="col-7">
+                            <form method="post" asp-controller="Account" asp-action="Register">
+                                <button type="submit" class="btn btn-warning">Sign-in</button>
+                            </form>
+                        </div>
+                    </div>
+                }
+
             </div>
         </div>
     </header>

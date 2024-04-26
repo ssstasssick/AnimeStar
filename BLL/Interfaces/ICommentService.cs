@@ -9,5 +9,6 @@ namespace BLL.Interfaces
 {
     public interface ICommentService : IService<CommentDTO>
     {
+        Task Create(CommentDTO commentDTO);
     }
 }
