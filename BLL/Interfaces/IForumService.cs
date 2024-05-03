@@ -9,5 +9,7 @@ namespace BLL.Interfaces
 {
     public interface IForumService : IService<ForumDTO>
     {
+        Task<ForumDTO> LoadPageInf(ForumDTO forum);
+        Task<IEnumerable<ForumDTO>> GetBestAsync(int count);
     }
 }

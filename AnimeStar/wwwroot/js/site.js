@@ -1,15 +1,16 @@
 ﻿
 $('#add-comment-form').submit(function (event) {
     event.preventDefault(); // Предотвращаем отправку формы по умолчанию
-
+    var forumId = $('input[name="forumId"]').val();
     // Отправляем данные формы на сервер с помощью AJAX
     $.ajax({
         url: '/Anime/AddComment',
         type: 'POST',
-        data: $(this).serialize(), // Сериализуем данные формы
+        data: $(this).serialize() + "&forumId=" + forumId, // Сериализуем данные формы
         success: function (data) {
             // Обновляем разметку страницы, добавляя новый комментарий
             $('#comments-container').append(data);
+            $('#comment').val('');
         },
         error: function () {
             // Обрабатываем ошибку, если таковая возникла
@@ -93,10 +94,128 @@ $(document).ready(function () {
     });
 });
 
+$('#add-review-form').submit(function (event) {
+    event.preventDefault();
 
+    $.ajax({
+        url: '/Anime/AddReview',
+        type: 'POST',
+        data: $(this).serialize(),
+        success: function (data) {
+            $('#review-container').prepend(data); // Добавление новой рецензии в начало списка
+            $('#comment').val('');
+        },
+        error: function () {
+            console.log('Произошла ошибка при отправке комментария.');
+        }
+    });
+});
 
+$('#add-forum-form').submit(function (event) {
+    event.preventDefault(); // Предотвращаем отправку формы по умолчанию
 
+    // Сохраняем ссылку на текущий контекст (this), чтобы использовать его внутри функции обратного вызова
+    var $form = $(this);
 
+    // Отправляем данные формы на сервер с помощью AJAX
+    $.ajax({
+        url: '/Anime/AddForum',
+        type: 'POST',
+        data: $form.serialize(), // Сериализуем данные формы
+        success: function () {
+            window.location.reload();
+        },
+        error: function () {
+            // Обрабатываем ошибку, если таковая возникла
+            console.log('Произошла ошибка при создании форума.');
+        }
+    });
+});
 
+document.addEventListener("DOMContentLoaded", function () {
+    var animeType = document.getElementById("TypeOfAnime").value;
+    var filmLengthField = document.getElementById("filmLengthField");
 
+    if (animeType === "Фильм") {
+        filmLengthField.style.display = "block";
+    } else {
+        filmLengthField.style.display = "none";
+    }
+
+    document.getElementById("TypeOfAnime").addEventListener("change", toggleFilmLengthField);
+});
+
+function toggleFilmLengthField() {
+    var animeType = document.getElementById("TypeOfAnime").value;
+    var filmLengthField = document.getElementById("filmLengthField");
+
+    if (animeType === "Фильм") {
+        filmLengthField.style.display = "block";
+    } else {
+        filmLengthField.style.display = "none";
+    }
+}
+
+async function deleteComment(commentId) {
+    try {
+        const response = await fetch(`/Anime/DeleteComment?commentId=${commentId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest' // Для ASP.NET Core маркировки запроса как AJAX
+            },
+        });
+
+        if (response.ok) {
+            window.location.reload();
+            // После удаления обновите интерфейс, скрывая удаленный комментарий
+        } else {
+            console.error('Failed to delete comment');
+        }
+    } catch (error) {
+        console.error('Error occurred while deleting comment:', error);
+    }
+}
+
+async function deleteForum(forumId) {
+    try {
+        const response = await fetch(`/Anime/DeleteForum?forumId=${forumId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest' // Для ASP.NET Core маркировки запроса как AJAX
+            },
+        });
+
+        if (response.ok) {
+            window.location.reload();
+            // После удаления обновите интерфейс, скрывая удаленный форум
+        } else {
+            console.error('Failed to delete forum');
+        }
+    } catch (error) {
+        console.error('Error occurred while deleting forum:', error);
+    }
+}
+
+async function deleteTextReview(reviewId) {
+    try {
+        const response = await fetch(`/Anime/DeleteTextReview?reviewId=${reviewId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With': 'XMLHttpRequest' // Для ASP.NET Core маркировки запроса как AJAX
+            },
+        });
+
+        if (response.ok) {
+            window.location.reload();
+            // После удаления обновите интерфейс, скрывая удаленный форум
+        } else {
+            console.error('Failed to delete review');
+        }
+    } catch (error) {
+        console.error('Error occurred while deleting review:', error);
+    }
+}
 

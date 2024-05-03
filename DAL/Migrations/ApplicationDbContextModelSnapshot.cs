@@ -42,7 +42,6 @@ namespace DAL.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("LenghtOfTheFilm")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("MPAAId")
@@ -283,9 +282,15 @@ namespace DAL.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AnimeId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Forums");
                 });
@@ -645,7 +650,15 @@ namespace DAL.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("DAL.Entity.ApplicationUser", "User")
+                        .WithMany("Forums")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Anime");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("DAL.Entity.PersonalList", b =>
@@ -755,6 +768,8 @@ namespace DAL.Migrations
             modelBuilder.Entity("DAL.Entity.ApplicationUser", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Forums");
 
                     b.Navigation("Reviews");
                 });

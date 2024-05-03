@@ -7,6 +7,7 @@ namespace BLL.Entity
         public virtual ICollection<ReviewDTO> Reviews { get; set; }
         public virtual ICollection<CommentDTO> Comments { get; set; }  
         public DateTime RegisterDate { get; set; }
+        public string Role { get; set; }
 
 
     }

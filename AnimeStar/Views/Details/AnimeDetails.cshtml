@@ -109,22 +109,41 @@
                         }
                         @if (User.Identity.IsAuthenticated)
                         {
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="list-group" id="list-tab" role="tablist">
-                                    <a class="list-group-item list-group-item-action newFon @(state == "Запланировано" ? "active" : "")" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-messages">Запланировано</a>
-                                    <a class="list-group-item list-group-item-action newFon @(state == "Смотрю" ? "active" : "")" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-messages">Смотрю</a>
-                                    <a class="list-group-item list-group-item-action newFon @(state == "Просмотрено" ? "active" : "")" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages">Просмотрено</a>
-                                    <a class="list-group-item list-group-item-action newFon @(state == "Отложено" ? "active" : "")" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Отложено</a>
-                                    <a class="list-group-item list-group-item-action newFon @(state == "Брошено" ? "active" : "")" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Брошено</a>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="list-group" id="list-tab" role="tablist">
+                                        <a class="list-group-item list-group-item-action newFon @(state == "Запланировано" ? "active" : "")" id="list-home-list" data-bs-toggle="list" href="#list-home" role="tab" aria-controls="list-messages">Запланировано</a>
+                                        <a class="list-group-item list-group-item-action newFon @(state == "Смотрю" ? "active" : "")" id="list-profile-list" data-bs-toggle="list" href="#list-profile" role="tab" aria-controls="list-messages">Смотрю</a>
+                                        <a class="list-group-item list-group-item-action newFon @(state == "Просмотрено" ? "active" : "")" id="list-messages-list" data-bs-toggle="list" href="#list-messages" role="tab" aria-controls="list-messages">Просмотрено</a>
+                                        <a class="list-group-item list-group-item-action newFon @(state == "Отложено" ? "active" : "")" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Отложено</a>
+                                        <a class="list-group-item list-group-item-action newFon @(state == "Брошено" ? "active" : "")" id="list-settings-list" data-bs-toggle="list" href="#list-settings" role="tab" aria-controls="list-settings">Брошено</a>
+                                    </div>
                                 </div>
-                            </div>
                             </div>
                         }
                         else
                         {
                             <div class="alert alert-info mt-2" role="alert">
                                 Для добавления аниме в свой список <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+                            </div>
+                        }
+                        @*  ..
+                        Действия
+                        .. *@
+                        @if (User.Claims.FirstOrDefault(c => c.Type == "Roles")?.Value == "moder")
+                        {
+                            <div class="info">
+                                Действия
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <div style="margin-right: 10px;">
+                                    <a href="@Url.Action("EditAnime", "Anime", new { id = Model.Id })" class="btn btn-primary">Редактировать</a>
+                                </div>
+                                <div>
+                                    <form method="post" asp-controller="Anime" asp-action="DeleteAnime" asp-route-id="@Model.Id" onsubmit="return confirm('Вы уверены, что хотите удалить аниме?');">
+                                        <button type="submit" class="btn btn-danger">Удалить аниме</button>
+                                    </form>
+                                </div>
                             </div>
                         }
                     </div>
@@ -138,7 +157,7 @@
                         </div>
                         <div class="row text-white">
                             <div class="text-center">
-                                @Model.AverageRating / 5
+                                @Model.AverageRating.ToString("F2") / 5
                             </div>
                         </div>
                         <div class="info">
@@ -160,7 +179,47 @@
                                 }
                             </div>
                         </div>
-
+                        <div class="info">
+                            Статистика
+                        </div>
+                        <div class="statistics">
+                            <div class="statistic">
+                                <div class="label">Запланировано</div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: @ViewBag.Statistics.PlannedPercentage%;"></div>
+                                    <div class="progress-text">@ViewBag.Statistics.PlannedCount</div>
+                                </div>
+                            </div>
+                            <div class="statistic">
+                                <div class="label">Смотрят</div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: @ViewBag.Statistics.WatchingPercentage%;"></div>
+                                    <div class="progress-text">@ViewBag.Statistics.WatchingCount</div>
+                                </div>
+                            </div>
+                            <div class="statistic">
+                                <div class="label">Просмотрено</div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: @ViewBag.Statistics.WatchedPercentage%;"></div>
+                                    <div class="progress-text">@ViewBag.Statistics.WatchedCount</div>
+                                </div>
+                            </div>
+                            <div class="statistic">
+                                <div class="label">Отложено</div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: @ViewBag.Statistics.PostponedPercentage%;"></div>
+                                    <div class="progress-text">@ViewBag.Statistics.PostponedCount</div>
+                                </div>
+                            </div>
+                            <div class="statistic">
+                                <div class="label">Брошено</div>
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: @ViewBag.Statistics.DroppedPercentage%;"></div>
+                                    <div class="progress-text">@ViewBag.Statistics.DroppedCount</div>
+                                </div>
+                            </div>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
@@ -197,15 +256,74 @@
                 <div class="info">
                     Форумы
                 </div>
-                <div class="text-white">
-                    @Model.Description
+                <div id="forum-container">
+                    @await Html.PartialAsync("_ForumListPartial", Model.Forums)
+                    <script src="~/js/site.js"></script>
                 </div>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div class="alert alert-info" role="alert">
+                        Чтобы начать обсуждение, пожалуйста, <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+                    </div>
+                }
+                else
+                {
+                    <div class="text-white">
+                        <form id="add-forum-form" method="post">
+                            <div class="form-group mb-2">
+                                <label for="title">Заголовок форума:</label>
+                                <input type="text" class="form-control" id="title" name="Title">
+                            </div>
+                            <div class="form-group">
+                                <input type="hidden" name="AnimeId" value="@Model.Id" />
+                            </div>
+                            <button type="submit" class="btn btn-primary">Создать форум</button>
+                        </form>
+                    </div>
+                }
                 <div class="description">
                     <div class="info">
                         Рецензии
                     </div>
                     <div class="text-white">
-                        @Model.Description
+
+                        <!-- Список рецензий -->
+                        <div id="review-container">
+                            @foreach (var review in Model.Reviews)
+                            {
+                                await Html.RenderPartialAsync("_ReviewPartial", review);
+                            }
+                        </div>
+                        <!-- Проверяем, аутентифицирован ли пользователь -->
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <div class="alert alert-info" role="alert">
+                                Чтобы оставить рецензию, пожалуйста, <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+                            </div>
+                        }
+                        else
+                        {
+                            @if (userRating != 0)
+                            {
+                                <!-- Форма для отправки комментария -->
+                                <form id="add-review-form" method="post">
+                                    <input type="hidden" name="AnimeId" value="@Model.Id" />
+                                    <div class="form-group text-white">
+                                        <label for="comment">Оставить рецензию:</label>
+                                        <textarea class="form-control" id="comment" name="Text" rows="3"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary mt-2">Отправить</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="alert alert-info" role="alert">
+                                    Чтобы оставить рецензию, пожалуйста, <a href="#rating-form" class="a-alert-info">поставьте оценку</a>
+                                </div>
+                            }
+
+                        }
+
                     </div>
                 </div>
                 <!-- Комментарии -->
@@ -217,7 +335,10 @@
                     <div id="comments-container">
                         @foreach (var comment in Model.Comments)
                         {
-                            await Html.RenderPartialAsync("_CommentPartial", comment);
+                            @if (comment.ForumId == null)
+                            {
+                                await Html.RenderPartialAsync("_CommentPartial", comment);
+                            }
                         }
                         <script src="~/js/site.js"></script>
                     </div>

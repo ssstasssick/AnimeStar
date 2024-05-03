@@ -1,0 +1,24 @@
+﻿@model AnimeStar.Models.StudioViewModel
+
+<div class="text-white">
+    <h1>Редактирование студии</h1>
+    <div class="fullInfAboutAnime">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label">Название</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ImageFile">Изображение</label>
+                <input type="file" class="form-control-file" id="ImageFile" name="ImageFile">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
+                <a href="@Url.Action("Index", "Studio")" class="btn btn-secondary">Отмена</a>
+            </div>
+        </form>
+    </div>
+</div>

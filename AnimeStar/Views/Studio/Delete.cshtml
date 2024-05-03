@@ -1,0 +1,35 @@
+﻿@model AnimeStar.Models.StudioViewModel
+
+<div class="text-white">
+    <h1>Удаление студии</h1>
+
+    <div class="fullInfAboutAnime">
+        <h4>Вы уверены, что хотите удалить студию "@Model.Name"?</h4>
+        <div>
+            <h5>Название:</h5>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Name)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Name)
+                </dd>
+            </dl>
+            <h5>Описание:</h5>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Description)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Description)
+                </dd>
+            </dl>
+        </div>
+        <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            <a href="@Url.Action("Index", "Studio")" class="btn btn-secondary">Отмена</a>
+        </form>
+    </div>
+</div>

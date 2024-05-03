@@ -31,7 +31,7 @@ namespace DAL.Entity
         [EnumDataType(typeof(AnimeType))]
         public string TypeOfAnime { get; set; }
         public int NumberOfEpisodes { get; set; }
-        public string LenghtOfTheFilm { get; set; }
+        public string? LenghtOfTheFilm { get; set; }
         [EnumDataType(typeof(State))]
         public string AnimeState { get; set; }
 

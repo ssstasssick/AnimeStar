@@ -1,0 +1,30 @@
+﻿@model IEnumerable<AnimeStar.Models.StudioViewModel>
+
+<div class="text-white">
+    <h1>Список студий</h1>
+    <div class="fullInfAboutAnime">
+        <p class="text-white">
+            <a asp-action="Create">Добавить</a>
+        </p>
+        <table class="table text-white">
+            <thead>
+                <tr>
+                    <th>Название</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var studio in Model)
+                {
+                    <tr>
+                        <td>@studio.Name</td>
+                        <td>
+                            <a href="@Url.Action("Edit", "Studio", new { id = studio.Id })">Редактировать</a> |
+                            <a href="@Url.Action("Delete", "Studio", new { id = studio.Id })">Удалить</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

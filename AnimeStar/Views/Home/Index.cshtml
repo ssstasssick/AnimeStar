@@ -2,8 +2,10 @@
     ViewData["Title"] = "Home Page";
 }
 
+@model BLL.Entity.ForumDTO
+
 <div class="container">
-    <a href="#" class="d-block text-left text-decoration-none bg-callout">
+    <a href="@Url.Action("AllAnime", "Anime", new { type = "latest" })" class="d-block text-left text-decoration-none bg-callout">
         <h2>Последние добавленные аниме</h2>
     </a>
     <div class="row">
@@ -28,82 +30,95 @@
         <div class="col-md-3 align-items-start">
             <div class="bg-custom p-2 my-2">
                 <h2>Мой список</h2>
-                <ul class="list-group">
-                    <li class="list-group-item"><a href="#" class="text-decoration-none">Аниме</a></li>
-                    <li class="list-group-item"><a href="#" class="text-decoration-none">Рецензии</a></li>
-                    <li class="list-group-item"><a href="#" class="text-decoration-none">Форумы</a></li>
-                    <li class="list-group-item"><a href="#" class="text-decoration-none">История</a></li>
-                </ul>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <div class="alert alert-info" role="alert">
+                        Чтобы посмотреть свой список, пожалуйста, <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+                    </div>
+                }
+                else
+                {
+                    <ul class="list-group">
+                        <li class="list-group-item"><a href="/Account/UserInfo" class="a-alert-info">Аниме</a></li>
+                        <li class="list-group-item"><a href="#" class="a-alert-info">Рецензии</a></li>
+                        <li class="list-group-item"><a href="#" class="a-alert-info">Форумы</a></li>
+                    </ul>
+                }
             </div>
         </div>
         <div class="col-md-4 align-items-start">
             <div class="container">
                 <div class="row">
                     <div class="m-1 p-1 bg-teg text-blue">
-                        <a class="text-decoration-none" href="#">Аниме</a>
+                        <a href="@Url.Action("AllAnime", "Anime", new { type = "all" })" class="a-alert-info">
+                            Аниме
+                        </a>
                     </div>
                 </div>
                 <div class="row">
                     <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># Весна 2024</a>
+                        <a href="@Url.Action("AllAnime", "Anime", new { type = "currentYear" })" class="a-alert-info">
+                            # @DateTime.Now.Year
+                        </a>
                     </div>
                     <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># Зима 2024</a>
+                        <a href="@Url.Action("AllAnime", "Anime", new { type = "lastYear" })" class="a-alert-info">
+                            # @(DateTime.Now.Year - 1)
+                        </a>
                     </div>
                     <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># 2024</a>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># 2023</a>
+                        <a href="@Url.Action("AllAnime", "Anime", new { type = "completed" })" class="a-alert-info">
+                            # Вышло
+                        </a>
                     </div>
                     <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># Онгоинги</a>
+                        <a href="@Url.Action("AllAnime", "Anime", new { type = "uncompleted" })" class="a-alert-info">
+                            # Онгоинг
+                        </a>
                     </div>
-
                 </div>
             </div>
         </div>
+        @* Форумы *@
         <div class="col-md-5 align-items-start">
             <div class="container">
                 <div class="row">
-                    <div class="m-1 p-1 bg-teg text-blue">
-                        <a class="text-decoration-none" href="#">Темы дня</a>
+                    <div class="row">
+                        <div class="m-1 p-1 bg-teg text-blue">
+                            <a class="a-alert-info" href="#">Популярные темы</a>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># Весна 2024</a>
-                    </div>
-                    <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># Зима 2024</a>
-                    </div>
-                    <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># 2024</a>
-                    </div>
-
-                </div>
-                <div class="row">
-                    <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># 2023</a>
-                    </div>
-                    <div class="m-1 p-1 col teg">
-                        <a href="#" class="text-decoration-none"># Онгоинги</a>
-                    </div>
-
+                    @foreach (var forum in ViewBag.BestForums)
+                    {
+                        <div class="row">
+                            <div class="m-1 p-1 bg-teg text-blue teg-forum">
+                                <a class="no-decoration" href="@Url.Action("ForumDetails", "Forum", new { id = forum.Id})">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex flex-row align-items-center">
+                                            @if (forum.Anime.Title != null)
+                                            {
+                                                <p class="mb-0 ms-2">@forum.Anime.Title</p>
+                                            }
+                                        </div>
+                                        <p class="small mb-0">@forum.CreationDate</p>
+                                    </div>
+                                    <div class="pl-2 ms-2" style="overflow: hidden; font-size: 14px;">
+                                        <p>@forum.Title</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
             <div w-100>
             </div>
         </div>
-
-        <a href="#" class="d-block text-left text-decoration-none bg-callout">
-            <h2>Лучшие аниме</h2>
-        </a>
     </div>
     <div class="row">
+        <a href="@Url.Action("AllAnime", "Anime", new { type = "best" })" class="d-block text-left text-decoration-none bg-callout">
+            <h2>Лучшие аниме</h2>
+        </a>
         @foreach (var anime in ViewBag.BestAnime)
         {
             <div class="col-md-4 mb-4">
@@ -113,7 +128,7 @@
                         <div class="minicard-info">
                             <h5 class="minicard-title">@anime.Title</h5>
                             <p class="minicard-text text-white">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
-                            <p class="minicard-text text-white">Оценка: @anime.AverageRating</p>
+                            <p class="minicard-text text-white">Оценка: @anime.AverageRating.ToString("0.00")</p>
                         </div>
                     </div>
                 </a>
@@ -122,4 +137,3 @@
     </div>
 
 </div>
-

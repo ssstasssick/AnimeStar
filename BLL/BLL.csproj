@@ -7,6 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Mappers\AnimeMap.cs" />
+    <Compile Remove="Mappers\CharacterMap.cs" />
+    <Compile Remove="Mappers\CommentMap.cs" />
+    <Compile Remove="Mappers\ForumMap.cs" />
+    <Compile Remove="Mappers\GenreMap.cs" />
+    <Compile Remove="Mappers\MPAA_Map.cs" />
+    <Compile Remove="Mappers\PersonalListMap.cs" />
+    <Compile Remove="Mappers\ReviewMap.cs" />
+    <Compile Remove="Mappers\StudioMap.cs" />
+    <Compile Remove="Mappers\UserMap.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />

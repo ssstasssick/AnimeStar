@@ -1,5 +1,6 @@
 ﻿using DAL.Entity;
 using DAL.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -49,8 +50,14 @@ namespace DAL.SQL
 
         public void Update(Studio entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            var existingStudio = _context.Studios.Find(entity.Id);
+            if (existingStudio != null)
+            {
+                existingStudio.Name = entity.Name;
+                existingStudio.Description = entity.Description;
+                _context.Studios.Update(existingStudio);
+                _context.SaveChanges();
+            }
         }
     }
 }

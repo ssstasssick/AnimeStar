@@ -31,7 +31,7 @@ namespace BLL
 
             services.AddScoped<IAnimeImagePathProvider>(provider =>
             {
-                return new ImgProvider(connRoot);
+                return new ImgProvider(connRoot, new FileAnimeImagePathProvider(connRoot));
             });
 
             services.AddScoped<IAnimeService, AnimeService>();
@@ -54,7 +54,7 @@ namespace BLL
 
             });
 
-            services.AddScoped<IMapper>(provider =>
+            services.AddScoped(provider =>
             {
                 return mapperConfig.CreateMapper();
 

@@ -15,18 +15,20 @@ namespace BLL.Services
     public class ReviewService : IReviewService
     {
         private readonly IReviewRepository _reviewRepository;
-        private readonly IUserRepository _userRepository;
+        private readonly IAnimeService _animeService;
         private readonly IMapper _mapper;
         
-        public ReviewService(IReviewRepository reviewRepository, IUserRepository userRepository,IMapper mapper)
+        public ReviewService(IReviewRepository reviewRepository, IAnimeService animeService, IMapper mapper)
         {
             _reviewRepository = reviewRepository;
+            _animeService = animeService;
             _mapper = mapper;
         }
 
         public void Create(ReviewDTO entity)
         {
             _reviewRepository.Create(_mapper.Map<Review>(entity));
+            _animeService.UpdateAverageRating(entity.AnimeId);
         }
 
         public void Delete(int id)
@@ -59,6 +61,7 @@ namespace BLL.Services
         public void Update(ReviewDTO entity)
         {
             _reviewRepository.Update(_mapper.Map<Review>(entity));
+            _animeService.UpdateAverageRating(entity.AnimeId);
         }
 
         

@@ -11,13 +11,18 @@ namespace BLL.Interfaces
 {
     public interface IUserService
     {
-        Task CreateUser(UserDTO user, string password);
-        Task ChangePassword(UserDTO user, string newPassword);
+        Task CreateUser(UserDTO user, string password, string role);
+        Task ChangePassword(UserDTO user, string oldPassword, string newPassword);
         Task DeleteUser(UserDTO  user);
         Task<UserDTO> GetUserByEmail(string email);
         Task<IEnumerable<UserDTO>> GetAllUsers();
         Task<bool> SignIn(string email, string password);
         Task<UserDTO> FindByName(string username);
         Task<UserDTO> GetUserByIdAsync(string userId);
+        Task<List<string>> GetUserRolesAsync(string userName);
+        Task UpdateUser(UserDTO user);
+        Task<IList<string>> GetRolesAsync(UserDTO user);
+        Task RemoveFromRolesAsync(UserDTO user, IEnumerable<string> roles);
+        Task AddToRoleAsync(UserDTO user, string role);
     }
 }

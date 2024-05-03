@@ -1,0 +1,43 @@
+﻿@using System.Security.Claims;
+@model BLL.Entity.ForumDTO
+
+<div class="forum">
+    <div class="text-white">
+        <h2>@Model.Title</h2>
+        <p>Аниме: @Model.Anime.Title</p>
+    </div>
+    
+    <div class="description">
+        <div class="info">
+            Обсуждение
+        </div>
+        <!-- Список комментариев -->
+        <div id="comments-container">
+            @foreach (var comment in Model.Comments)
+            {
+                await Html.RenderPartialAsync("_CommentPartial", comment);
+            }
+            <script src="~/js/site.js"></script>
+        </div>
+        <!-- Проверяем, аутентифицирован ли пользователь -->
+        @if (!User.Identity.IsAuthenticated)
+        {
+            <div class="alert alert-info" role="alert">
+                Чтобы начать обсуждение, пожалуйста, <a href="/Account/Authorization" class="a-alert-info">войдите</a> в систему или <a href="/Account/Register" class="a-alert-info">зарегистрируйтесь</a>.
+            </div>
+        }
+        else
+        {
+            <!-- Форма для отправки комментария -->
+            <form id="add-comment-form" method="post">
+                <input type="hidden" name="AnimeId" value="@Model.AnimeId" />
+                <input type="hidden" name="ForumId" value="@Model.Id" />
+                <div class="form-group text-white">
+                    <label for="comment">Оставьте своё мнение:</label>
+                    <textarea class="form-control" id="comment" name="Text" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary mt-2">Отправить</button>
+            </form>
+        }
+    </div>
+</div>

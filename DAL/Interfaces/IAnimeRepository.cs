@@ -9,6 +9,6 @@ namespace DAL.Interfaces
 {
     public interface IAnimeRepository : IRepository<Anime>
     {
-
+        int CreateWhithId(Anime anime);
     }
 }

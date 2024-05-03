@@ -11,4 +11,8 @@
     <div class="pl-2 ms-2" style="overflow: hidden; font-size: 14px;">
         <p>@Model.Text</p>
     </div>
+    @if (User.Claims.FirstOrDefault(c => c.Type == "Roles")?.Value == "moder")
+    {
+        <button class="btn btn-danger btn-sm mt-0" onclick="deleteComment(@Model.Id)">Удалить комментарий</button>
+    }
 </div>

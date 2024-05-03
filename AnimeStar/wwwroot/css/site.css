@@ -287,12 +287,14 @@ header {
     background-color: #eda9ff;
     color: #330033;
     border: none;
-    text-align:center;
+    text-align: center;
     padding: 0.1rem;
 }
+
     .newFon.active {
         background-color: #330033;
     }
+
     .newFon:hover {
         background-color: #330033;
         color: whitesmoke;
@@ -308,9 +310,9 @@ header {
     color: #330033;
 }
 
-.a-alert-info:hover{
-    color: blueviolet;
-}
+    .a-alert-info:hover {
+        color: blueviolet;
+    }
 
 .accordion-button {
     background-color: #eda9ff;
@@ -325,4 +327,102 @@ header {
 
 .accordion-body {
     background-color: #ffe6ff;
+}
+
+.bd-example {
+    margin-right: 0;
+    margin-left: 0;
+    border-width: 1px;
+    border-top-left-radius: .25rem;
+    border-top-right-radius: .25rem;
+}
+
+.progress {
+    background-color: rgba(0, 0, 0, 0);
+    display: flex;
+    height: 1rem;
+    overflow: hidden;
+    font-size: .75rem;
+    border-radius: .25rem;
+}
+
+.progress-bar {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    background-color: #f785ff;
+    transition: width .6s ease;
+    margin-bottom: 0.3rem;
+    border-radius: 0.5rem;
+}
+
+/*Форум гл*/
+
+.teg-forum {
+    overflow: hidden;
+    white-space: nowrap; /* Предотвратить перенос текста на новую строку */
+    text-overflow: ellipsis;
+    padding: 0rem !important;
+    margin-bottom: .1px !important;
+}
+
+/*Диограмма*/
+
+.progress-bar {
+    position: relative;
+    background-color: #ddd;
+    height: 20px;
+    border-radius: 5px;
+    overflow: hidden;
+    background-color: #f785ff !important;
+    color: #221121 !important;
+    font-weight: bold;
+}
+
+.progress {
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
+    font-weight: bold;
+    height: 100%;
+}
+
+.progress-text {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    line-height: 20px; /* Выравнивание по вертикали */
+    text-align: center; /* Выравнивание по горизонтали */
+}
+
+.statistics {
+    display: flex;
+    flex-direction: column;
+}
+
+.statistic {
+    
+}
+
+.label {
+    font-weight: bold;
+    color: rgb(241 188 244);
+}
+
+/*кнопки ред и уд*/
+.btn-primary {
+    color: #fff;
+    background-color: #6e1a90 !important;
+    border-color: #5f3568 !important;
+}
+
+.btn-danger {
+    color: #fff;
+    background-color: #b335dc !important;
+    border-color: #9b2cc6 !important;
 }

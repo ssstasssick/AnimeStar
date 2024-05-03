@@ -28,11 +28,13 @@ namespace BLL.Services
         private readonly IUserRepository _userRepository;
         private readonly IReviewRepository _reviewRepository;
         private readonly IPersonalListRepository _personalListRepository;
+        private readonly IForumRepository _forumRepository;
         private readonly IMapper _mapper;
 
         public AnimeService(IAnimeRepository animeRepository, IMapper mapper, IAnimeAndCharacterRepository animeAndCharacterRepository,
-            IAnimeAndGenreRepository animeAndGenreRepository, IAnimeAndStudioRepository animeAndStudioRepository, IMPAARepository mPAARepository, 
-            ICommentRepository commentRepository, IUserRepository userRepository, IReviewRepository reviewRepository, IPersonalListRepository personalListRepository)
+            IAnimeAndGenreRepository animeAndGenreRepository, IAnimeAndStudioRepository animeAndStudioRepository, IMPAARepository mPAARepository,
+            ICommentRepository commentRepository, IUserRepository userRepository, IReviewRepository reviewRepository,
+            IPersonalListRepository personalListRepository, IForumRepository forumRepository)
         {
             _animeRepository = animeRepository;
             _mapper = mapper;
@@ -44,6 +46,7 @@ namespace BLL.Services
             _userRepository = userRepository;
             _reviewRepository = reviewRepository;
             _personalListRepository = personalListRepository;
+            _forumRepository = forumRepository;
         }
 
         public void Create(AnimeDTO entity)
@@ -75,7 +78,8 @@ namespace BLL.Services
 
         public void Update(AnimeDTO entity)
         {
-            _animeRepository.Update(_mapper.Map<Anime>(entity));
+            var animeEntity = _mapper.Map<Anime>(entity);
+            _animeRepository.Update(animeEntity);
         }
 
         public IEnumerable<AnimeDTO> GetBest(int animeCount)
@@ -96,7 +100,6 @@ namespace BLL.Services
 
                 // Рассчитать средний рейтинг для текущего аниме
                 var averageRating = CalculateAverageRating(animeReviews);
-
                 // Сохранить средний рейтинг в словаре
                 averageRatings.Add(anime.Id, averageRating);
             }
@@ -112,7 +115,7 @@ namespace BLL.Services
                 .OrderByDescending(anime => anime.AverageRating)
                 .Take(animeCount)
                 .Select(a => _mapper.Map<AnimeDTO>(a));
-                 
+
 
             // Вернуть результат
             return topAnime;
@@ -146,24 +149,18 @@ namespace BLL.Services
 
         public void UpdateAverageRating(int animeId)
         {
-            //var anime = _context.Anime
-            //    .Include(a => a.Reviews)
-            //    .FirstOrDefault(a => a.Id == animeId);
+            var reviews = _reviewRepository.Find(r => r.AnimeId == animeId).Select(r => _mapper.Map<ReviewDTO>(r)).ToList();
 
-            //if (anime != null)
-            //{
-            //    if (anime.Reviews.Any())
-            //    {
-            //        anime.AverageRating = anime.Reviews.Average(r => r.Rating);
-            //    }
-            //    else
-            //    {
-            //        anime.AverageRating = 0.0;
-            //    }
+            // Получить все аниме
+            var anime = _animeRepository.Get(animeId);
 
-            //    _context.SaveChanges();
-            //}
+            anime.AverageRating = CalculateAverageRating(reviews);
+
+            _animeRepository.Update(anime);
+
         }
+
+
 
         public async Task<AnimeDTO> LoadPageInf(AnimeDTO anime)
         {
@@ -172,7 +169,7 @@ namespace BLL.Services
             anime.MPAA = _mpaaRepository.Find(a => a.Id == anime.MPAAId).Select(m => _mapper.Map<MPAA_DTO>(m)).First();
             anime.Genres = _animeAndGenreRepository.Find(anime.Id).Select(g => _mapper.Map<GenreDTO>(g)).ToList();
             anime.Comments = _commentRepository.Find(c => c.AnimeId == anime.Id).Select(c => _mapper.Map<CommentDTO>(c)).ToList();
-
+            anime.Forums = _forumRepository.Find(f => f.AnimeId == anime.Id).Select(f => _mapper.Map<ForumDTO>(f)).ToList();
             // Перебираем комментарии и асинхронно получаем пользователя для каждого комментария
             foreach (var comment in anime.Comments)
             {
@@ -185,7 +182,16 @@ namespace BLL.Services
                 .Select(r => _mapper.Map<ReviewDTO>(r))
                 .ToList();
 
-            anime.AverageRating = CalculateAverageRating(anime.Reviews.ToList());
+            foreach (var review in anime.Reviews)
+            {
+                review.UserName = _mapper.Map<UserDTO>(await _userRepository.GetUserByIdAsync(review.UserId)).UserName;
+            }
+
+            foreach (var forum in anime.Forums)
+            {
+                forum.UserName = _mapper.Map<UserDTO>(await _userRepository.GetUserByIdAsync(forum.UserId)).UserName;
+            }
+
             anime.PersonalLists = _personalListRepository.Find(l => l.AnimeId == anime.Id).Select(l => _mapper.Map<PersonalListDTO>(l)).ToList();
 
             return anime;
@@ -210,5 +216,96 @@ namespace BLL.Services
             return averageRating;
         }
 
+        public int CreateWhithId(AnimeDTO entity)
+        {
+            return _animeRepository.CreateWhithId(_mapper.Map<Anime>(entity));
+        }
+
+        public void UpdateAnimeGenres(AnimeDTO anime, List<int> genreIds)
+        {
+            // Получить текущие связи аниме с жанрами
+            var currentGenres = _animeAndGenreRepository.Find(anime.Id);
+
+            // Удалить существующие связи, которых нет в списке выбранных жанров
+            foreach (var currentGenre in currentGenres)
+            {
+                if (!genreIds.Contains(currentGenre.Id))
+                {
+                    _animeAndGenreRepository.Delete(anime.Id, currentGenre.Id);
+                }
+            }
+
+            // Добавить новые связи, которых нет в текущих связях
+            foreach (var genreId in genreIds)
+            {
+                if (!currentGenres.Any(c => c.Id == genreId))
+                {
+                    _animeAndGenreRepository.Create(anime.Id, genreId);
+                }
+            }
+        }
+
+        public void UpdateAnimeCharacters(AnimeDTO anime, List<int> characterIds)
+        {
+            // Получить текущие связи аниме с персонажами
+            var currentCharacters = _animeAndCharacterService.Find(anime.Id);
+
+            // Удалить существующие связи, которых нет в списке выбранных персонажей
+            foreach (var currentCharacter in currentCharacters)
+            {
+                if (!characterIds.Contains(currentCharacter.Id))
+                {
+                    _animeAndCharacterService.Delete(anime.Id, currentCharacter.Id);
+                }
+            }
+
+            // Добавить новые связи, которых нет в текущих связях
+            foreach (var characterId in characterIds)
+            {
+                if (!currentCharacters.Any(c => c.Id == characterId))
+                {
+                    _animeAndCharacterService.Create(anime.Id, characterId);
+                }
+            }
+        }
+
+        public void UpdateAnimeStudios(AnimeDTO anime, int studioId)
+        {
+            // Получить текущую связь аниме со студией
+            var currentStudio = _animeAndStudioRepository.Find(anime.Id).FirstOrDefault();
+
+            // Если текущая связь существует и не совпадает с новой студией, удалить ее
+            if (currentStudio != null && currentStudio.Id != studioId)
+            {
+                _animeAndStudioRepository.Delete(anime.Id, currentStudio.Id);
+            }
+
+            // Если новая студия не совпадает с текущей, добавить новую связь
+            if (currentStudio == null || currentStudio.Id != studioId)
+            {
+                _animeAndStudioRepository.Create(anime.Id, studioId);
+            }
+
+        }
+
+        public AnimeStatisticsDTO GetAnimeStatistics(int animeId)
+        {
+            var plannedCount = _personalListRepository.Find(pl => pl.State.Equals("Запланировано")).Where(pl => pl.AnimeId == animeId).Count();
+            var watchingCount = _personalListRepository.Find(pl => pl.State.Equals("Смотрю")).Where(pl => pl.AnimeId == animeId).Count();
+            var watchedCount = _personalListRepository.Find(pl => pl.State.Equals("Просмотрено")).Where(pl => pl.AnimeId == animeId).Count();
+            var postponedCount = _personalListRepository.Find(pl => pl.State.Equals("Отложено")).Where(pl => pl.AnimeId == animeId).Count();
+            var droppedCount = _personalListRepository.Find(pl => pl.State.Equals("Брошено")).Where(pl => pl.AnimeId == animeId).Count();
+
+            var statistics = new AnimeStatisticsDTO
+            {
+                PlannedCount = plannedCount,
+                WatchingCount = watchingCount,
+                WatchedCount = watchedCount,
+                PostponedCount = postponedCount,
+                DroppedCount = droppedCount
+            };
+
+            return statistics;
+        }
     }
 }

@@ -29,6 +29,7 @@ namespace DAL.SQL
             if (forum != null)
             {
                 _context.Forums.Remove(forum);
+                _context.SaveChanges();
             }
         }
 

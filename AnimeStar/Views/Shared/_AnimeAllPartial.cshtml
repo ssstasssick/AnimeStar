@@ -1,0 +1,39 @@
+﻿@{
+    int count = 0; // Инициализируем счетчик
+}
+
+@foreach (var anime in ViewBag.AllAnime)
+{
+    if (count % 4 == 0)
+    {
+        // Если счетчик делится на 4 без остатка, добавляем новую строку
+        @:<div class="row">
+    }
+
+    <div class="col-md-3 mb-4">
+        <a class="no-decoration" href="@Url.Action("AnimeDetails", "Home", new { id = anime.Id})">
+            <div class="minicard">
+                <img src="@anime.ImgPath" class="minicard-img" alt="@anime.Title">
+                <div class="minicard-info">
+                    <h5 class="minicard-title">@anime.Title</h5>
+                    <p class="minicard-text text-white">Дата выпуска: @anime.ReleaseDate.ToShortDateString()</p>
+                    <p class="minicard-text text-white">Оценка: @anime.AverageRating.ToString("0.00")</p>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    count++; // Увеличиваем счетчик
+
+    if (count % 4 == 0)
+    {
+        // Если счетчик делится на 4 без остатка, закрываем строку
+        @:</div>
+    }
+}
+
+@if (count % 4 != 0)
+{
+    // Если количество аниме не делится на 4 без остатка, закрываем последнюю строку
+    @:</div>
+}

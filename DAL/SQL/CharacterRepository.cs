@@ -21,6 +21,7 @@ namespace DAL.SQL
         public void Create(Character entity)
         {
             _context.Characters.Add(entity);
+            _context.SaveChanges();
         }
 
         public void Delete(int id)
@@ -50,8 +51,15 @@ namespace DAL.SQL
 
         public void Update(Character entity)
         {
-            _context.Entry(entity).State = EntityState.Modified;
-            _context.SaveChanges();
+            var existingCharacter = _context.Characters.Find(entity.Id);
+            if (existingCharacter != null)
+            {
+                existingCharacter.Name = entity.Name;
+                existingCharacter.Description = entity.Description;
+                existingCharacter.ImgName = entity.ImgName;
+                _context.Characters.Update(existingCharacter);
+                _context.SaveChanges();
+            }
         }
     }
 }

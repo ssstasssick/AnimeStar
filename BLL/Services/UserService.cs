@@ -4,6 +4,7 @@ using BLL.Interfaces;
 using DAL.Entity;
 using DAL.Interfaces;
 using DAL.SQL;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -24,14 +25,14 @@ namespace BLL.Services
             _mapper = mapper;
         }
 
-        public async Task CreateUser(UserDTO user, string password)
+        public async Task CreateUser(UserDTO user, string password, string role)
         {
-            await userRepository.Create(_mapper.Map<ApplicationUser>(user), password);
+            await userRepository.Create(_mapper.Map<ApplicationUser>(user), password, role);
         }
 
-        public async Task ChangePassword(UserDTO user, string newPassword)
+        public async Task ChangePassword(UserDTO user, string oldPassword, string newPassword)
         {
-            await userRepository.ChangePassword(_mapper.Map<ApplicationUser>(user), newPassword);;
+            await userRepository.ChangePassword(_mapper.Map<ApplicationUser>(user), oldPassword, newPassword);;
         }
 
         public async Task DeleteUser(UserDTO user)
@@ -63,5 +64,30 @@ namespace BLL.Services
         {
             return _mapper.Map<UserDTO>(await userRepository.GetUserByIdAsync(userId));
         }
+
+        public async Task<List<string>> GetUserRolesAsync(string userName)
+        {
+            return await userRepository.GetUserRolesAsync(userName);
+        }
+        public async Task UpdateUser(UserDTO user)
+        {
+            await userRepository.UpdateUser(_mapper.Map<ApplicationUser>(user));
+        }
+        public async Task<IList<string>> GetRolesAsync(UserDTO user)
+        {
+            var list = await userRepository.GetRolesAsync(_mapper.Map<ApplicationUser>(user));
+            return list;
+        }
+
+        public async Task RemoveFromRolesAsync(UserDTO user, IEnumerable<string> roles)
+        {
+            await userRepository.RemoveFromRolesAsync(_mapper.Map<ApplicationUser>(user), roles);
+        }
+
+        public async Task AddToRoleAsync(UserDTO user, string role)
+        {
+            await userRepository.AddToRoleAsync(_mapper.Map<ApplicationUser>(user), role);
+        }
+
     }
 }

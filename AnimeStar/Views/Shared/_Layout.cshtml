@@ -10,15 +10,12 @@
     <link rel="stylesheet" href="~/css/miniBlockAnime.css" asp-append-version="true" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="~/AnimeStar.styles.css" asp-append-version="true" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <header class="p-1 bg-dark">
         <div class="container">
             <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-                <a href="#" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                    <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#"></use></svg>
-                </a>
-
                 <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center align-items-center mb-md-0">
                     <li><a href="/" class="nav-link py-0 text-secondary animeHead">AnimeStar</a></li>
                     <li class="nav-item dropdown">
@@ -36,7 +33,16 @@
                             <li><h6 class="dropdown-header">Сообщество</h6></li>
                             <li><a class="dropdown-item" href="#" title="">Форум</a></li>
                             <li><a class="dropdown-item" href="#" title="">Рецензии</a></li>
-                            <li><a class="dropdown-item" href="#" title="">Пользователи</a></li>
+                            <li><a class="dropdown-item" href="/Account/Users" title="">Пользователи</a></li>
+                            
+                            @if (User.Claims.FirstOrDefault(c => c.Type == "Roles")?.Value == "moder")
+                            {
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Anime/AddAnime" title="">Добавить аниме</a></li>
+                                <li><a class="dropdown-item" href="/Character/Index" title="">Персонажи</a></li>
+                                <li><a class="dropdown-item" href="/Studio/Index" title="">Студии</a></li>
+                                <li><a class="dropdown-item" href="/Genre/Index" title="">Жанры</a></li>
+                            }
                             <li><hr class="dropdown-divider"></li>
                             <li><a class="dropdown-item" href="#">О нас</a></li>
                         </ul>
@@ -44,15 +50,44 @@
 
                     <li>
                         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-4" role="search">
-                            <input type="search" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+                            <input list="animeList" id="searchInput" class="form-control form-control-dark text-bg-dark" placeholder="Search..." aria-label="Search">
+                            <datalist id="animeList"></datalist>
                         </form>
-                    </li>
-                    <li>
-                        <a class="align-items-center me-3" href="#"><img src="/img/icons/forum.png" /></a>
-                    </li>
-                    <li>
-                        <a class="align-items-center me-3" href="#"><img src="/img/icons/mail.png" /></a>
-                    </li>
+
+                        <script>
+                            const searchInput = document.getElementById('searchInput');
+                            const animeList = document.getElementById('animeList');
+
+                            searchInput.addEventListener('input', async (event) => {
+                                const searchTerm = event.target.value.trim();
+
+                                if (searchTerm.length === 0) {
+                                    animeList.innerHTML = ''; // Очистить список при пустом поисковом запросе
+                                    return;
+                                }
+
+                                const response = await fetch(`/Home/Search?searchTerm=${encodeURIComponent(searchTerm)}`);
+                                const data = await response.json();
+
+                                animeList.innerHTML = ''; // Очистить список перед добавлением новых элементов
+                                data.forEach(anime => {
+                                    const option = document.createElement('option');
+                                    option.value = anime.title;
+                                    option.textContent = anime.title;
+                                    option.dataset.animeId = anime.id; // Скрытое значение id аниме в атрибуте data-anime-id
+                                    animeList.appendChild(option);
+                                });
+                            });
+
+                            // Обработчик события change для поля ввода
+                            searchInput.addEventListener('change', (event) => {
+                                const selectedOption = animeList.querySelector(`option[value="${event.target.value}"]`);
+                                if (selectedOption) {
+                                    const selectedAnimeId = selectedOption.dataset.animeId;
+                                    window.location.href = `/Home/AnimeDetails?id=${selectedAnimeId}`; // Перенаправление на страницу с деталями аниме
+                                }
+                            });
+                        </script>
                 </ul>
                 @if (User.Identity.IsAuthenticated)
                 {
@@ -94,7 +129,7 @@
 
     <footer class="border-top footer text-muted footer-main">
         <div class="container">
-            &copy; 2024 - AnimeStar - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - AnimeStar
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

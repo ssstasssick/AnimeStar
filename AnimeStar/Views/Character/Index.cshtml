@@ -1,0 +1,38 @@
+﻿@model IEnumerable<BLL.Entity.CharacterDTO>
+
+<h1 class="text-white">Персонажи</h1>
+
+<div class="fullInfAboutAnime">
+<p class="text-white">
+    <a asp-action="Create">Добавить</a>
+</p>
+
+<table class="table text-white">
+    <thead>
+        <tr>
+            <th>
+                Имя
+            </th>
+            <th>
+                Действия
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Редактировать</a> |
+                    <a href="@Url.Action("CharacterDetailsById", "Anime", new { characterId = item.Id })">Детали</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Удалить</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+</div>

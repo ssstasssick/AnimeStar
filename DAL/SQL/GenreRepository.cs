@@ -29,6 +29,7 @@ namespace DAL.SQL
             if (genre != null)
             {
                 _context.Remove(genre);
+                _context.SaveChanges();
             }
         }
 

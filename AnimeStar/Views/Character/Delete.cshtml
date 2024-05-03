@@ -1,0 +1,28 @@
+﻿@model BLL.Entity.CharacterDTO
+
+<h2 class="text-white">Удаление</h2>
+<div class="fullInfAboutAnime text-white">
+<h3 class="text-white"> Вы уверены, что хотите удалить персонажа?</h3>
+<div text-white>
+    <hr />
+    <dl class="dl-horizontal text-white mb-2">
+        <dt>
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+
+    <form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-action="Index">Назад</a>
+    </form>
+</div>
+</div>

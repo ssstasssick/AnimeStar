@@ -1,0 +1,24 @@
+﻿@model List<BLL.Entity.ForumDTO>
+@foreach (var forum in Model)
+{
+    <div class="comment mb-4">
+        <a class="no-decoration" href="@Url.Action("ForumDetails", "Forum", new { id = forum.Id})">
+            <div class="d-flex justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                    @if (forum.UserName != null)
+                    {
+                        <p class="mb-0 ms-2">@forum.UserName</p>
+                    }
+                </div>
+                <p class="small mb-0">@forum.CreationDate</p>
+            </div>
+            <div class="pl-2 ms-2" style="overflow: hidden; font-size: 14px;">
+                <p>@forum.Title</p>
+            </div>
+        </a>
+        @if (User.Claims.FirstOrDefault(c => c.Type == "Roles")?.Value == "moder")
+        {
+            <button class="btn btn-danger btn-sm" onclick="deleteForum(@forum.Id)">Удалить форум</button>
+        }
+    </div>
+}

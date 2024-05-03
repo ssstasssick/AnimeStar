@@ -6,6 +6,17 @@
             <div class="row p-3 m-2">
                 <h2>Регистрация</h2>
             </div>
+
+            <!-- Вывод сообщения об ошибке -->
+            @if (!string.IsNullOrEmpty(ViewBag.ErrorMessage))
+            {
+                <div class="row mb-2">
+                    <div class="col">
+                        <p class="text-danger">@ViewBag.ErrorMessage</p>
+                    </div>
+                </div>
+            }
+
             <div class="row mb-2">
                 <label asp-for="Email"></label>
                 <input asp-for="Email" />
@@ -24,29 +35,3 @@
         </form>
     </div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/jquery.validation/1.16.0/jquery.validate.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $("#registerForm").validate({
-            rules: {
-                Email: {
-                    required: true,
-                    email: true
-                },
-                Password: {
-                    required: true
-                },
-                Name: {
-                    required: true
-                }
-            },
-            messages: {
-                Email: "Please enter a valid email address",
-                Password: "Please enter your password",
-                Name: "Please enter your name"
-            }
-        });
-    });
-</script>

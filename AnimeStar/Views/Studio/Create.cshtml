@@ -1,0 +1,21 @@
+﻿@model StudioViewModel
+
+<h1 class="text-white">Создать студию</h1>
+
+<div class="fullInfAboutAnime text-white">
+    <form asp-action="Create" enctype="multipart/form-data">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Name" class="control-label">Название</label>
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="ImageFile">Изображение</label>
+            <input type="file" class="form-control-file" id="ImageFile" name="ImageFile">
+        </div>
+        <div class="form-group mt-2">
+            <input type="submit" value="Создать" class="btn btn-primary" />
+        </div>
+    </form>
+</div>
